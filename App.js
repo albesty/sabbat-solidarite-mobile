@@ -1,20 +1,33 @@
+import { Button, Provider as PaperProvider, TextInput } from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import AppLoading from 'expo-app-loading';
+import { useFonts as UseRobotoFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
+import { useFonts as useLobsterFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
+
+import { colors } from './scr/utils/styles';
+import AuthNavigator from './scr/navigation/AuthNavigator';
 
 export default function App() {
+  let [robotoFontsLoaded] = UseRobotoFonts({
+    Roboto_400Regular,
+  });
+
+  let [lobsterLoaded] = useLobsterFonts({
+    Lobster_400Regular,
+  });
+
+  if (!robotoFontsLoaded || !lobsterLoaded) {
+    return <AppLoading />;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <PaperProvider>
+        <NavigationContainer>
+          <AuthNavigator />
+        </NavigationContainer>
+      </PaperProvider>
+      <StatusBar style="light" backgroundColor={colors.rougeBordeau} />
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
