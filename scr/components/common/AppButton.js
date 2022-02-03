@@ -31,5 +31,7 @@ const styles = StyleSheet.create({
   },
   label: {
     paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

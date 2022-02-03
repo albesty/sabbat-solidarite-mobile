@@ -5,7 +5,10 @@ import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import AppSpacer from '../../components/common/AppSpacer';
 import AuthBackground from '../../components/authentication/AuthBackground';
 import { TextInput } from 'react-native-paper';
-
+import { register } from '../../api/services/authServices';
+import useAuth from '../../hooks/useAuth';
+import routes from '../../navigation/routes';
+import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 const validUser = Yup.object().shape({
   email: Yup.string().email('Email invalid.').required('Adresse mail requise.'),
   password: Yup.string()
@@ -19,47 +22,69 @@ const validUser = Yup.object().shape({
     .required('Veuillez confirmer le mot de passe.'),
 });
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }) {
+  const { getUserLoggedIn } = useAuth();
   const [securePassword, setSecurePassword] = useState(true);
   const [secureConfirmPass, setSecureConfirmPass] = useState(true);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (user) => {
-    console.log(user);
+  const handleRegister = async (user, { resetForm }) => {
+    setLoading(true);
+    setError(null);
+    const userData = {
+      email: user.email,
+      password: user.password,
+    };
+
+    const response = await register(userData);
+    if (!response.ok) {
+      setLoading(false);
+      setError(response.data?.message);
+      return;
+    }
+    const connexionError = await getUserLoggedIn(userData);
+    setLoading(false);
+    if (connexionError) navigation.navigate(routes.LOGIN);
+    else navigation.navigate('Starter');
   };
 
   return (
-    <AuthBackground style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <AppForm
-        initialValues={{
-          email: '',
-          password: '',
-          confirmPassword: '',
-        }}
-        validationSchema={validUser}
-        onSubmit={handleRegister}
-      >
-        <AppFormField icon="email" label="email" name="email" />
-        <AppSpacer />
-        <AppFormField
-          right={<TextInput.Icon name="eye" onPress={() => setSecurePassword(!securePassword)} />}
-          secureTextEntry={securePassword}
-          icon="lock"
-          label="password"
-          name="password"
-        />
-        <AppSpacer />
-        <AppFormField
-          right={
-            <TextInput.Icon name="eye" onPress={() => setSecureConfirmPass(!secureConfirmPass)} />
-          }
-          secureTextEntry={secureConfirmPass}
-          icon="lock"
-          label="confirmer password"
-          name="confirmPassword"
-        />
-        <AppSpacer />
-        <AppSubmitButton title="Valider" />
-      </AppForm>
-    </AuthBackground>
+    <>
+      <AuthBackground error={error}>
+        <AppForm
+          initialValues={{
+            email: '',
+            password: '',
+            confirmPassword: '',
+          }}
+          validationSchema={validUser}
+          onSubmit={handleRegister}
+        >
+          <AppFormField icon="email" label="email" name="email" />
+          <AppSpacer />
+          <AppFormField
+            right={<TextInput.Icon name="eye" onPress={() => setSecurePassword(!securePassword)} />}
+            secureTextEntry={securePassword}
+            icon="lock"
+            label="password"
+            name="password"
+          />
+          <AppSpacer />
+          <AppFormField
+            right={
+              <TextInput.Icon name="eye" onPress={() => setSecureConfirmPass(!secureConfirmPass)} />
+            }
+            secureTextEntry={secureConfirmPass}
+            icon="lock"
+            label="confirmer password"
+            name="confirmPassword"
+          />
+          <AppSpacer />
+          <AppSubmitButton title="Valider" />
+        </AppForm>
+      </AuthBackground>
+      {loading && <AppActivityIndicator />}
+    </>
   );
 }

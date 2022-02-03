@@ -6,7 +6,8 @@ import LoginScreen from '../screens/authentication/LoginScreen';
 import RegisterScreen from '../screens/authentication/RegisterScreen';
 import { colors } from '../utils/styles';
 import NavigationTitle from '../components/navigation/NavigationTitle';
-import BackButton from '../components/navigation/BackButton';
+import StarterNavigator from './StarterNavigator';
+import HeaderButton from '../components/navigation/HeaderButton';
 
 const AuthStack = createStackNavigator();
 
@@ -18,7 +19,7 @@ export default function AuthNavigator() {
         headerTintColor: colors.white,
         headerLeft: () =>
           route.name !== 'WelcomeScreen' ? (
-            <BackButton onPress={() => navigation.goBack()} />
+            <HeaderButton onPress={() => navigation.goBack()} />
           ) : null,
         ...TransitionPresets.SlideFromRightIOS,
       })}
@@ -44,6 +45,13 @@ export default function AuthNavigator() {
         }}
         name={routes.REGISTER}
         component={RegisterScreen}
+      />
+      <AuthStack.Screen
+        name="Starter"
+        component={StarterNavigator}
+        options={{
+          headerShown: false,
+        }}
       />
     </AuthStack.Navigator>
   );

@@ -4,7 +4,7 @@ import LottieView from 'lottie-react-native';
 import { colors, fonts, sizes } from '../../utils/styles';
 import AppText from '../common/AppText';
 
-export default function BackgroundScreen({ children }) {
+export default function BackgroundScreen({ error, children }) {
   return (
     <>
       <ImageBackground
@@ -21,6 +21,7 @@ export default function BackgroundScreen({ children }) {
         <View style={styles.contentContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <AppText style={styles.textStyle}>Sabbat-Solidarité</AppText>
+            {error && <AppText style={styles.error}>{error}</AppText>}
             {children}
           </ScrollView>
         </View>
@@ -56,5 +57,11 @@ const styles = StyleSheet.create({
   },
   animation: {
     position: 'absolute',
+  },
+  error: {
+    fontFamily: fonts.contentFont,
+    color: colors.rouge,
+    alignSelf: 'center',
+    marginBottom: 10,
   },
 });
