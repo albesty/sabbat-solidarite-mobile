@@ -13,6 +13,7 @@ import NavigationTitle from '../components/navigation/NavigationTitle';
 import AssociationDetailScreen from '../screens/association/AssociationDetailScreen';
 import UserCompteNavigator from './UserCompteNavigator';
 import TransactionNavigator from './TransactionNavigator';
+import AssociationTabNavigator from './AssociationTabNavigator';
 
 const StarterStack = createStackNavigator();
 export default function StarterNavigator({ navigation }) {
@@ -66,7 +67,7 @@ export default function StarterNavigator({ navigation }) {
         name={routes.ASSOCIATION_DETAIL}
         component={AssociationDetailScreen}
         options={({ route }) => ({
-          headerTitle: () => <NavigationTitle title={`${route.params.nom} Détails`} />,
+          headerTitle: () => <NavigationTitle title={`${route.params.nom}   Détails`} />,
         })}
       />
       <StarterStack.Screen
@@ -79,6 +80,13 @@ export default function StarterNavigator({ navigation }) {
       <StarterStack.Screen
         name={routes.TRANSACTION}
         component={TransactionNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <StarterStack.Screen
+        name={routes.ASSOCIATION_TAB}
+        component={AssociationTabNavigator}
         options={{
           headerShown: false,
         }}

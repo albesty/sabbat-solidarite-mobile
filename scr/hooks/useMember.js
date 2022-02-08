@@ -1,10 +1,14 @@
 import { useContext } from 'react/cjs/react.development';
 import { getConnectedUserAssociations } from '../api/services/memberServices';
+import { AssociationContext } from '../contexts/AssociationContext';
 import { MemberContext } from '../contexts/MemberContext';
 import { memberActions } from '../reducers/memberReducer';
+import useAuth from './useAuth';
 
 export default function useMember() {
   const { memberState, dispatch } = useContext(MemberContext);
+  const { associationState } = useContext(AssociationContext);
+  const { isAdmin } = useAuth();
 
   const getUserAssociations = async () => {
     let error = null;
@@ -22,5 +26,21 @@ export default function useMember() {
     return currentMemberState;
   };
 
-  return { getUserAssociations, getAssociationMemberState };
+  const getCurrentUserAssociations = async () => {
+    const allAssociations = associationState.list;
+    const userAsso = await getUserAssociations();
+    const userList = [];
+    if (isAdmin()) {
+      for (let i = 0; i < allAssociations.lenght; i++) {
+        const selected = allAssociations[i];
+        const isMember = userAsso.find((item) => item.id === selected.id);
+        if (isMember) return;
+        else userAsso.push(selected);
+      }
+    }
+
+    return userAsso;
+  };
+
+  return { getUserAssociations, getAssociationMemberState, getCurrentUserAssociations };
 }

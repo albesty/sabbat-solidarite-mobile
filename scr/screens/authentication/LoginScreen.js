@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import AuthBackground from '../../components/authentication/AuthBackground';
 import AppSpacer from '../../components/common/AppSpacer';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
-import { login } from '../../api/services/authServices';
 import useAuth from '../../hooks/useAuth';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 

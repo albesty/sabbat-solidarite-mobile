@@ -1,5 +1,5 @@
-import { StyleSheet, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import React, { useContext, useState } from 'react';
+import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppImagePicker from '../../components/common/AppImagePicker';
 import UserAvatar from '../../components/user/UserAvatar';
@@ -9,8 +9,8 @@ import AppIconButton from '../../components/common/AppIconButton';
 import { colors } from '../../utils/styles';
 import UploaderModal from '../../components/common/UploaderModal';
 import useUploadImage from '../../hooks/useUploadImage';
-import { editUserImage } from '../../api/services/authServices';
-import { actions as authActions } from '../../reducers/authReducer';
+import { editUserImage, getSelectedUserData } from '../../api/services/authServices';
+import { actions, actions as authActions } from '../../reducers/authReducer';
 import AppSurface from '../../components/common/AppSurface';
 import AppAnimation from '../../components/common/AppAnimation';
 import AppSpacer from '../../components/common/AppSpacer';
@@ -21,27 +21,33 @@ import routes from '../../navigation/routes';
 
 export default function CompteScreen({ route, navigation }) {
   const { state, dispatch } = useContext(AuthContext);
+  const selectedUser = route.params ? route.params : state.user;
   const { formatFonds } = useAssociation();
   const { uploader } = useUploadImage();
-  const selectedUser = route.params ? route.params : state.user;
-  const [currentUser, setCurrentUser] = useState(selectedUser);
+  const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(selectedUser || {});
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [uploadAvatarProgress, setUploadAvatarProgress] = useState(0);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [pieces, setPieces] = useState([]);
+  const [pieces, setPieces] = useState(currentUser.piece ? currentUser.piece : []);
   const [validePieces, setValidePieces] = useState(false);
+  const [piecesLoading, setPiecesLoading] = useState(false);
   const [uploadingPiece, setUploadingPiece] = useState(false);
   const [uploadPieceProgress, setUploadPieceProgress] = useState(0);
   const [isPiece, setIsPiece] = useState(false);
-  const [showInfo, setShowInfo] = useState(true);
+  const [permutPiece, setPermutPiece] = useState(false);
+
+  const showLoadingPieceContainer = uploadingPiece || piecesLoading;
 
   const handleSelectPieces = (image) => {
     setImageModalVisible(false);
-    setPieces([...pieces, image]);
+    if (pieces.length === 2) setPieces([image]);
+    else setPieces([...pieces, image]);
     setValidePieces(true);
   };
 
   const handleSaveImages = async (imge) => {
+    const dataArray = isPiece ? pieces : [imge];
     setImageModalVisible(false);
     if (isPiece) {
       setUploadPieceProgress(0);
@@ -51,7 +57,7 @@ export default function CompteScreen({ route, navigation }) {
       setUploadingAvatar(true);
     }
     try {
-      const result = await uploader([imge], (progress) => setUploadAvatarProgress(progress / 1));
+      const result = await uploader(dataArray, (progress) => setUploadAvatarProgress(progress / 1));
       const urls = result.signedUrlsArray.map((res) => res.url);
       let data = {};
       if (isPiece) {
@@ -75,8 +81,9 @@ export default function CompteScreen({ route, navigation }) {
       setUploadingPiece(false);
       setUploadingAvatar(false);
       setCurrentUser(editResponse.data);
-      dispatch({ type: authActions.update_avatar, updatedUser: editResponse.data });
-      alert('Votre avatar a été modifié avec succès.');
+      dispatch({ type: authActions.update_info, updatedUser: editResponse.data });
+      setValidePieces(false);
+      alert('Vos images ont été modifiées avec succès.');
     } catch (error) {
       setUploadingPiece(false);
       setUploadingAvatar(false);
@@ -93,7 +100,7 @@ export default function CompteScreen({ route, navigation }) {
           {
             text: 'Ajouter',
             onPress: () => {
-              setImageModalVisible(true);
+              return setImageModalVisible(true);
             },
           },
           { text: 'Valider quand meme', onPress: async () => await handleSaveImages(pieces) },
@@ -107,6 +114,27 @@ export default function CompteScreen({ route, navigation }) {
   const handleSaveAvatar = async (image) => {
     await handleSaveImages(image);
   };
+
+  const getUserState = useCallback(async () => {
+    setLoading(true);
+    const selectedUserData = await getSelectedUserData({ userId: state.user.id });
+    if (!selectedUserData.ok) {
+      setLoading(false);
+      alert("Erreur: nous n'avons pas pu mettre vos informations à jour.");
+    }
+    setCurrentUser(selectedUserData.data);
+    dispatch({ type: actions.loginOrRegister, user: selectedUserData.data });
+    dispatch({ type: actions.update_state, updateState: false });
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (state.updateState) {
+        getUserState();
+      }
+    });
+    return () => unsubscribe;
+  }, [navigation, state.updateState]);
 
   return (
     <>
@@ -123,7 +151,7 @@ export default function CompteScreen({ route, navigation }) {
             )}
           </View>
           <AppText style={{ marginVertical: 10 }}>
-            {selectedUser.username ? selectedUser.username : selectedUser.email}
+            {currentUser.username ? currentUser.username : currentUser.email}
           </AppText>
           {!uploadingAvatar && (
             <AppIconButton
@@ -144,18 +172,28 @@ export default function CompteScreen({ route, navigation }) {
             />
           </View>
           <AppSpacer />
-          <AppText>{formatFonds(currentUser.wallet)}</AppText>
+          <AppText style={styles.walletFunds}>{formatFonds(currentUser.wallet)}</AppText>
           <AppSpacer />
           <AppSpacer />
           <AppButton
-            onPress={() => navigation.navigate(routes.TRANSACTION, { screen: routes.RECHARGE })}
+            onPress={() =>
+              navigation.navigate(routes.TRANSACTION, {
+                screen: routes.NEW_TRANSACTION,
+                params: { transactionName: 'rechargement' },
+              })
+            }
             icon="credit-card-plus"
             mode="outlined"
             title="Recharger"
             style={styles.rechargeButton}
           />
           <TouchableOpacity
-            onPress={() => navigation.navigate(routes.TRANSACTION, { screen: routes.RETRAIT })}
+            onPress={() =>
+              navigation.navigate(routes.TRANSACTION, {
+                screen: routes.NEW_TRANSACTION,
+                params: { transactionName: 'retrait' },
+              })
+            }
             style={styles.retirerButton}
           >
             <MaterialCommunityIcons
@@ -181,13 +219,54 @@ export default function CompteScreen({ route, navigation }) {
           <View style={styles.pieceContainer}>
             {pieces.length === 0 && (
               <AppText style={{ fontSize: 15 }}>
-                Vos documents d'Identification s'afficheront ici. Les pièces d'Identification ne
-                sont obligatoires que pour les utilisateurs désirant bénéfier de la formule fonds
-                triplés.
+                Vos documents d'Identification s'afficheront ici.
               </AppText>
             )}
-            {validePieces && (
-              <AppButton onPress={() => handleSavePieces} icon="check" title="Valider" />
+            {pieces.length > 0 && (
+              <Image
+                onLoadStart={() => setPiecesLoading(true)}
+                onLoadEnd={() => setPiecesLoading(false)}
+                style={styles.pieces}
+                source={{
+                  uri:
+                    isPiece && permutPiece
+                      ? pieces[1].url
+                      : isPiece && !permutPiece
+                      ? pieces[0].url
+                      : !isPiece && !permutPiece
+                      ? pieces[0]
+                      : pieces[1],
+                }}
+              />
+            )}
+            {pieces.length > 0 && !showLoadingPieceContainer && (
+              <AppIconButton
+                onPress={() => setPermutPiece(!permutPiece)}
+                color={colors.rougeBordeau}
+                icon="update"
+                size={30}
+                style={styles.retourneButton}
+              />
+            )}
+            {validePieces && !showLoadingPieceContainer && (
+              <View style={styles.valideStyle}>
+                <AppIconButton
+                  onPress={() => setPieces(currentUser.pieces || [])}
+                  style={{ backgroundColor: colors.rougeBordeau }}
+                  icon="cancel"
+                />
+                <AppIconButton
+                  onPress={handleSavePieces}
+                  style={{ backgroundColor: colors.vert, marginLeft: 50 }}
+                  icon="check"
+                />
+              </View>
+            )}
+            {showLoadingPieceContainer && (
+              <View style={styles.piecesLoadingContainer}>
+                {piecesLoading && <AppAnimation />}
+                {uploadingPiece && <UploaderModal progress={uploadPieceProgress} />}
+              </View>
             )}
             <AppIconButton
               onPress={() => {
@@ -200,42 +279,24 @@ export default function CompteScreen({ route, navigation }) {
             />
           </View>
         </List.Accordion>
-        <List.Accordion
-          left={(props) => <List.Icon {...props} icon="wallet-outline" />}
+        <List.Item
           title="Transactions"
-        >
-          <List.Item
-            title="Rechargements"
-            onPress={() => navigation.navigate(routes.TRANSACTION, { screen: routes.RECHARGE })}
-            left={(props) => <List.Icon {...props} icon="credit-card-plus" />}
-          />
-          <List.Item
-            onPress={() => navigation.navigate(routes.TRANSACTION, { screen: routes.RETRAIT })}
-            left={(props) => <List.Icon {...props} icon="credit-card-minus" />}
-            title="Retraits"
-          />
-        </List.Accordion>
-        <List.Accordion
-          left={(props) => <List.Icon {...props} icon="account-details" />}
-          title="Infos personnelles"
-        >
-          <List.Item
-            onPress={() => navigation.navigate(routes.PROFILE)}
-            left={(props) => <List.Icon {...props} icon="account-edit" />}
-            title="Votre profile"
-          />
-        </List.Accordion>
+          onPress={() =>
+            navigation.navigate(routes.TRANSACTION, { screen: routes.TRANSACTION_HOME })
+          }
+          left={(props) => <List.Icon {...props} icon="wallet-outline" />}
+        />
 
-        <List.Accordion
+        <List.Item
+          onPress={() => navigation.navigate(routes.PROFILE)}
+          left={(props) => <List.Icon {...props} icon="account-details" />}
+          title="Profile"
+        />
+        <List.Item
+          onPress={() => navigation.navigate(routes.PARAM)}
           left={(props) => <List.Icon {...props} icon="cog" />}
-          title="Parametres de connexion"
-        >
-          <List.Item
-            onPress={() => navigation.navigate(routes.PARAM)}
-            left={(props) => <List.Icon {...props} icon="account-settings" />}
-            title="Modifier"
-          />
-        </List.Accordion>
+          title="Paramètres de connexion"
+        />
       </ScrollView>
 
       <AppImagePicker
@@ -259,6 +320,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     alignSelf: 'center',
     marginTop: 10,
+    alignItems: 'center',
   },
   camera: {
     backgroundColor: colors.leger,
@@ -281,6 +343,9 @@ const styles = StyleSheet.create({
   wallet: {
     marginHorizontal: 20,
   },
+  walletFunds: {
+    fontWeight: 'bold',
+  },
   rechargeButton: {
     marginVertical: 10,
     width: '80%',
@@ -298,14 +363,38 @@ const styles = StyleSheet.create({
     left: 5,
   },
   pieceContainer: {
-    height: 180,
+    height: 'auto',
+    minHeight: 100,
     marginHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   infoPiece: {
     flexDirection: 'row',
     marginHorizontal: 20,
     alignItems: 'flex-start',
+  },
+  pieces: {
+    height: 150,
+    width: '100%',
+  },
+  retourneButton: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  valideStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderColor: colors.leger,
+    marginVertical: 5,
+  },
+  piecesLoadingContainer: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
   },
 });

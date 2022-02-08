@@ -11,6 +11,7 @@ import AuthContextProvider from './scr/contexts/AuthContext';
 import AssociationContextProvider from './scr/contexts/AssociationContext';
 import MemberContextProvider from './scr/contexts/MemberContext';
 import FileUploaderContextProvider from './scr/contexts/FileUploaderContext';
+import TransactionContextProvider from './scr/contexts/TransactionContext';
 
 export default function App() {
   let [robotoFontsLoaded] = UseRobotoFonts({
@@ -31,9 +32,11 @@ export default function App() {
           <AssociationContextProvider>
             <MemberContextProvider>
               <FileUploaderContextProvider>
-                <NavigationContainer>
-                  <AuthNavigator />
-                </NavigationContainer>
+                <TransactionContextProvider>
+                  <NavigationContainer>
+                    <AuthNavigator />
+                  </NavigationContainer>
+                </TransactionContextProvider>
               </FileUploaderContextProvider>
             </MemberContextProvider>
           </AssociationContextProvider>

@@ -1,5 +1,5 @@
-import { FlatList } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, StyleSheet } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AddNewButton from '../../components/common/AddNewButton';
 import routes from '../../navigation/routes';
 import { AssociationContext } from '../../contexts/AssociationContext';
@@ -8,11 +8,15 @@ import AppWaitInfo from '../../components/common/AppWaitInfo';
 import AssociationCard from '../../components/association/AssociationCard';
 import { MemberContext } from '../../contexts/MemberContext';
 import useMember from '../../hooks/useMember';
+import { AuthContext } from '../../contexts/AuthContext';
+import useAuth from '../../hooks/useAuth';
 
 export default function ListAssociationScreen({ navigation }) {
   const { associationState } = useContext(AssociationContext);
+  const { state } = useContext(AuthContext);
   const { memberState } = useContext(MemberContext);
-  const { getAssociationMemberState } = useMember();
+  const { getUserAssociations } = useMember();
+  const { isAdmin } = useAuth();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [associations, setAssociations] = useState([]);
@@ -21,31 +25,61 @@ export default function ListAssociationScreen({ navigation }) {
     navigation.navigate(routes.ASSOCIATION_DETAIL, association);
   };
 
+  const handleValidPress = (association) => {
+    if (!association.isValid && !isAdmin()) {
+      alert('Cette association est encours de validation.');
+      return;
+    }
+    navigation.navigate(routes.ASSOCIATION_DETAIL, association);
+  };
+
+  const getMemberAssociations = useCallback(async () => {
+    setLoading(true);
+    const errorMember = await getUserAssociations();
+    if (errorMember) {
+      setLoading(false);
+      alert('Error lors du rechargement.');
+      return;
+    }
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
+    getMemberAssociations();
     setAssociations(associationState.list);
-  }, [associationState.list, memberState.userAssociations]);
+  }, [state.updateState]);
 
   return (
     <>
       <FlatList
+        contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         data={associations}
         keyExtractor={(assoc) => assoc.nom}
         renderItem={({ item }) => (
           <AssociationCard
-            adhesionState={getAssociationMemberState(memberState.userAssociations, item.id)}
+            handleValidPress={() => handleValidPress(item)}
+            adhesionState={memberState.userAssociations
+              .find((ass) => ass.id === item.id)
+              ?.member?.relation.toLowerCase()}
             association={item}
             onPress={() => handleSelectAssociation(item)}
           />
         )}
       />
-      {associations.length === 0 && !error && (
-        <AppWaitInfo info="Chargement de la liste encours..." />
+      {!loading && associations.length === 0 && !error && (
+        <AppWaitInfo info="Aucune association trouvée." />
       )}
       {!loading && error && <AppWaitInfo info={`Erreur: ${error}`} />}
+      {loading && <AppActivityIndicator />}
 
       <AddNewButton onPress={() => navigation.navigate(routes.NEW_ASSOCIATION)} />
-      {loading && <AppActivityIndicator />}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  listContainer: {
+    paddingVertical: 30,
+  },
+});

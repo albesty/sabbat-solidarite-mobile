@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Card } from 'react-native-paper';
 import AppText from '../common/AppText';
 import { colors } from '../../utils/styles';
@@ -9,6 +9,8 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { MemberContext } from '../../contexts/MemberContext';
 import AppButton from '../common/AppButton';
 import { memberActions } from '../../reducers/memberReducer';
+import AppWaitInfo from '../common/AppWaitInfo';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default function AssociationCard({
   onPress,
@@ -16,6 +18,8 @@ export default function AssociationCard({
   cardStyle,
   association,
   adhesionState,
+  handleValidPress,
+  showActions = true,
 }) {
   const { state } = useContext(AuthContext);
   const { dispatch } = useContext(MemberContext);
@@ -45,52 +49,54 @@ export default function AssociationCard({
   };
 
   return (
-    <Card onPress={onPress} elevation={5} mode="elevated" style={[styles.card, cardStyle]}>
-      <Card.Cover style={coverStyle} source={require('../../../assets/main_dans_la_main.jpg')} />
-      <Card.Content>
-        <Card.Title
-          title={association.nom}
-          subtitle={association.description}
-          titleNumberOfLines={1}
-          subtitleNumberOfLines={2}
-          subtitleStyle={styles.subtitle}
-        />
-      </Card.Content>
-      <Card.Actions>
-        {isAdmin() && <AppButton style={styles.adminStatyle} loading={true} title="Modifier" />}
-        {adhesionState === 'member' ? (
-          <View style={styles.contentContainer}>
-            <AppButton
-              style={styles.stopButton}
-              mode="outlined"
-              title="Quitter"
-              labelStyle={styles.exitButton}
-            />
-            <AppText style={styles.memberStyle}>Déjà membre</AppText>
-          </View>
-        ) : adhesionState === 'ondemand' ? (
-          <View style={styles.contentContainer}>
-            {!isAdmin() && (
+    <TouchableWithoutFeedback onPress={handleValidPress}>
+      <Card onPress={onPress} elevation={5} mode="elevated" style={[styles.card, cardStyle]}>
+        <Card.Cover style={coverStyle} source={require('../../../assets/main_dans_la_main.jpg')} />
+        <Card.Content>
+          <Card.Title
+            title={association.nom}
+            subtitle={association.description}
+            titleNumberOfLines={1}
+            subtitleNumberOfLines={2}
+            subtitleStyle={styles.subtitle}
+          />
+        </Card.Content>
+        {showActions && (
+          <Card.Actions>
+            {adhesionState === 'member' ? (
+              <View style={styles.contentContainer}>
+                <AppButton
+                  style={styles.stopButton}
+                  mode="outlined"
+                  title="Quitter"
+                  labelStyle={styles.exitButton}
+                />
+                <AppText style={styles.memberStyle}>Déjà membre</AppText>
+              </View>
+            ) : adhesionState === 'ondemand' ? (
+              <View style={styles.contentContainer}>
+                <AppButton
+                  style={styles.stopButton}
+                  mode="outlined"
+                  title="Annuler"
+                  labelStyle={styles.exitButton}
+                />
+                <AppText style={styles.checking}>envoyé</AppText>
+              </View>
+            ) : (
               <AppButton
-                style={styles.stopButton}
-                mode="outlined"
-                title="Annuler"
-                labelStyle={styles.exitButton}
+                disabled={disableSendButton}
+                style={[styles.adminStatyle, styles.button]}
+                title="Adhérer"
+                onPress={sendMessageForAdhesion}
+                loading={cardLoading}
               />
             )}
-            <AppText style={styles.checking}>envoyé</AppText>
-          </View>
-        ) : (
-          <AppButton
-            disabled={disableSendButton}
-            style={[styles.adminStatyle, styles.button]}
-            title="Adhérer"
-            onPress={sendMessageForAdhesion}
-            loading={cardLoading}
-          />
+          </Card.Actions>
         )}
-      </Card.Actions>
-    </Card>
+      </Card>
+      {!association.isValid && <AppWaitInfo info="Encours de vaidation..." />}
+    </TouchableWithoutFeedback>
   );
 }
 

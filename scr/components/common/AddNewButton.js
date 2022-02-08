@@ -6,7 +6,7 @@ import AppIconButton from './AppIconButton';
 export default function AddNewButton({ style, onPress, icon = 'plus', ...other }) {
   return (
     <View style={styles.container}>
-      <AppIconButton size={35} onPress={onPress} {...other} />
+      <AppIconButton size={40} onPress={onPress} {...other} />
     </View>
   );
 }
@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
     right: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.bleuFbi,
+    backgroundColor: colors.rougeBordeau,
   },
 });

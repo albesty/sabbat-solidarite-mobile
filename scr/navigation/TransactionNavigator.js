@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import routes from './routes';
-import RechargeScreen from '../screens/transaction/RechargeScreen';
-import RetraitScreen from '../screens/transaction/RetraitScreen';
 import { colors } from '../utils/styles';
 import HeaderButton from '../components/navigation/HeaderButton';
+import NewTransactionScreen from '../screens/transaction/NewTransactionScreen';
+import NavigationTitle from '../components/navigation/NavigationTitle';
+import TransactionScreen from '../screens/transaction/TransactionScreen';
 
 const TransactionStack = createStackNavigator();
 
@@ -20,18 +21,18 @@ export default function TransactionNavigator() {
       })}
     >
       <TransactionStack.Screen
-        name={routes.RECHARGE}
-        component={RechargeScreen}
+        name={routes.TRANSACTION_HOME}
+        component={TransactionScreen}
         options={{
-          title: 'Rechargement protefeuille',
+          title: 'Vos Transactions',
         }}
       />
       <TransactionStack.Screen
-        name={routes.RETRAIT}
-        component={RetraitScreen}
-        options={{
-          title: 'Retrait de fonds',
-        }}
+        name={routes.NEW_TRANSACTION}
+        component={NewTransactionScreen}
+        options={({ route }) => ({
+          headerTitle: () => <NavigationTitle title={`Nouveau ${route.params.transactionName}`} />,
+        })}
       />
     </TransactionStack.Navigator>
   );

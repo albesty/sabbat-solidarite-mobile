@@ -71,9 +71,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     position: 'absolute',
     backgroundColor: colors.white,
-    height: 300,
     width: '100%',
-    top: '60%',
+    height: '100%',
+    top: '70%',
   },
   close: {
     alignSelf: 'flex-end',

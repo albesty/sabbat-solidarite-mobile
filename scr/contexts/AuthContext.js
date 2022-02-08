@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 const initialState = {
   loading: false,
+  updateState: false,
   error: null,
   user: null,
 };

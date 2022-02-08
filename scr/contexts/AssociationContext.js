@@ -8,11 +8,11 @@ const initialState = {
 };
 
 export default function AssociationContextProvider({ children }) {
-  const [associationState, dispatch] = useReducer(associationReducer, initialState);
+  const [associationState, associationDispatch] = useReducer(associationReducer, initialState);
 
   const contextValue = useMemo(() => {
-    return { associationState, dispatch };
-  }, [associationState, dispatch]);
+    return { associationState, associationDispatch };
+  }, [associationState, associationDispatch]);
 
   return <AssociationContext.Provider value={contextValue}>{children}</AssociationContext.Provider>;
 }

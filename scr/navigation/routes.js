@@ -12,4 +12,13 @@ export default Object.freeze({
   RETRAIT: 'RetraitScreen',
   PROFILE: 'ProfileScreen',
   PARAM: 'ConnexionParamScreen',
+  NEW_TRANSACTION: 'NewTransactionScreen',
+  TRANSACTION_HOME: 'TransactionScreen',
+  ASSOCIATION_TAB: 'AssociationTabNavigator',
+  CAISSE: 'CaisseScreen',
+  COTISATION: 'CotisationScreen',
+  MEMBER: 'MemberScreen',
+  ENGAGEMENT: 'EngagementScreen',
+  MEMBER_COMPTE: 'MemberCompteScreen',
+  DASHBOARD: 'DashboardNavigator',
 });

@@ -3,11 +3,16 @@ import React from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import { colors } from '../../utils/styles';
 
-export default function AppActivityIndicator({ containerStyle }) {
+export default function AppActivityIndicator({ containerStyle, indicatorStyle }) {
   return (
     <View style={[styles.mainContainer, containerStyle]}>
       <View style={styles.container}>
-        <ActivityIndicator animating={true} color={colors.rougeBordeau} size="large" />
+        <ActivityIndicator
+          style={indicatorStyle}
+          animating={true}
+          color={colors.rougeBordeau}
+          size="large"
+        />
       </View>
     </View>
   );
@@ -18,7 +23,6 @@ const styles = StyleSheet.create({
     top: '50%',
     alignSelf: 'center',
     justifyContent: 'center',
-    zIndex: 999,
   },
   mainContainer: {
     position: 'absolute',

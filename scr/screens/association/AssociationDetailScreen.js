@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import AssociationCard from '../../components/association/AssociationCard';
 import { useContext, useState } from 'react/cjs/react.development';
@@ -6,10 +6,15 @@ import { MemberContext } from '../../contexts/MemberContext';
 import useMember from '../../hooks/useMember';
 import { List } from 'react-native-paper';
 import useAssociation from '../../hooks/useAssociation';
+import useAuth from '../../hooks/useAuth';
+import AppButton from '../../components/common/AppButton';
+import routes from '../../navigation/routes';
+import { colors } from '../../utils/styles';
 
-export default function AssociationDetailScreen({ route }) {
+export default function AssociationDetailScreen({ route, navigation }) {
   const { getAssociationMemberState } = useMember();
   const { formatFonds } = useAssociation();
+  const { isAdmin } = useAuth();
   const selectedAssociation = route.params;
   const { memberState } = useContext(MemberContext);
   const [expandCotisation, setExpandCotisation] = useState(false);
@@ -72,6 +77,14 @@ export default function AssociationDetailScreen({ route }) {
             <List.Item title={`Reglement interieur => Encours de redaction`} />
           </List.Accordion>
         )}
+        {isAdmin() && (
+          <AppButton
+            style={styles.button}
+            onPress={() => navigation.navigate(routes.NEW_ASSOCIATION, selectedAssociation)}
+            title="Editer"
+            icon="content-save-edit"
+          />
+        )}
       </ScrollView>
     </>
   );
@@ -84,10 +97,17 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   cover: {
-    height: 150,
+    height: 130,
   },
   contentStyle: {
     paddingVertical: 20,
     paddingBottom: 20,
+  },
+  button: {
+    backgroundColor: colors.rougeBordeau,
+    alignSelf: 'flex-end',
+    width: '50%',
+    marginRight: 20,
+    marginVertical: 20,
   },
 });

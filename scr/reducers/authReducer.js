@@ -1,7 +1,8 @@
 export const actions = {
   loginOrRegister: 'LOGIN_OR_REGISTER',
   logout: 'LOGOUT',
-  update_avatar: 'UPDATE_AVATAR',
+  update_info: 'UPDATE_AVATAR',
+  update_state: 'UPDATE_STATE',
 };
 
 export const authReducer = (state, action) => {
@@ -10,8 +11,10 @@ export const authReducer = (state, action) => {
       return { ...state, user: action.user };
     case actions.logout:
       return { ...state, user: null };
-    case actions.update_avatar:
+    case actions.update_info:
       return { ...state, user: action.updatedUser };
+    case actions.update_state:
+      return { ...state, updateState: action.updateState };
     default:
       return state;
   }

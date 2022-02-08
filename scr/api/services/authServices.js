@@ -8,4 +8,9 @@ const register = (user) => apiClient.post('/auth/signup', user);
 
 const editUserImage = (data) => apiClient.patch(`${userUrl}/editImages`, data);
 
-export { login, register, editUserImage };
+const getSelectedUserData = (data) => apiClient.post(`${userUrl}/userData`, data);
+
+const editUserInfo = (data) => apiClient.patch(`${userUrl}/editInfo`, data);
+
+const changePassword = (data) => apiClient.patch(`${userUrl}/changeCredentials`, data);
+export { login, register, editUserImage, getSelectedUserData, editUserInfo, changePassword };

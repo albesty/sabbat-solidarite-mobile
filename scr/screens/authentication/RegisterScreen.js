@@ -61,7 +61,13 @@ export default function RegisterScreen({ navigation }) {
           validationSchema={validUser}
           onSubmit={handleRegister}
         >
-          <AppFormField icon="email" label="email" name="email" />
+          <AppFormField
+            textContentType="emailAddress"
+            keyboardType="email-address"
+            icon="email"
+            label="email"
+            name="email"
+          />
           <AppSpacer />
           <AppFormField
             right={<TextInput.Icon name="eye" onPress={() => setSecurePassword(!securePassword)} />}
@@ -69,6 +75,7 @@ export default function RegisterScreen({ navigation }) {
             icon="lock"
             label="password"
             name="password"
+            textContentType="password"
           />
           <AppSpacer />
           <AppFormField
@@ -79,6 +86,7 @@ export default function RegisterScreen({ navigation }) {
             icon="lock"
             label="confirmer password"
             name="confirmPassword"
+            textContentType="password"
           />
           <AppSpacer />
           <AppSubmitButton title="Valider" />
