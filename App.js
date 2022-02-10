@@ -5,13 +5,14 @@ import AppLoading from 'expo-app-loading';
 import { useFonts as UseRobotoFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
 import { useFonts as useLobsterFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
 
-import { colors } from './scr/utils/styles';
-import AuthNavigator from './scr/navigation/AuthNavigator';
-import AuthContextProvider from './scr/contexts/AuthContext';
-import AssociationContextProvider from './scr/contexts/AssociationContext';
-import MemberContextProvider from './scr/contexts/MemberContext';
-import FileUploaderContextProvider from './scr/contexts/FileUploaderContext';
-import TransactionContextProvider from './scr/contexts/TransactionContext';
+import { colors } from './src/utils/styles';
+import AuthNavigator from './src/navigation/AuthNavigator';
+import AuthContextProvider from './src/contexts/AuthContext';
+import AssociationContextProvider from './src/contexts/AssociationContext';
+import MemberContextProvider from './src/contexts/MemberContext';
+import FileUploaderContextProvider from './src/contexts/FileUploaderContext';
+import TransactionContextProvider from './src/contexts/TransactionContext';
+import SelectedAssociationProvider from './src/contexts/SelectedAssociationContext';
 
 export default function App() {
   let [robotoFontsLoaded] = UseRobotoFonts({
@@ -33,9 +34,11 @@ export default function App() {
             <MemberContextProvider>
               <FileUploaderContextProvider>
                 <TransactionContextProvider>
-                  <NavigationContainer>
-                    <AuthNavigator />
-                  </NavigationContainer>
+                  <SelectedAssociationProvider>
+                    <NavigationContainer>
+                      <AuthNavigator />
+                    </NavigationContainer>
+                  </SelectedAssociationProvider>
                 </TransactionContextProvider>
               </FileUploaderContextProvider>
             </MemberContextProvider>

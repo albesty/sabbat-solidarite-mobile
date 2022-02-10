@@ -1,0 +1,38 @@
+import { StyleSheet, TouchableHighlight } from 'react-native';
+import React from 'react';
+import { Surface } from 'react-native-paper';
+import { colors, fonts } from '../../utils/styles';
+import AppText from './AppText';
+
+export default function AppSurface({ style, onPress, info, surfaceStyle, children }) {
+  return (
+    <TouchableHighlight
+      underlayColor={colors.leger}
+      style={[styles.container, style]}
+      onPress={onPress}
+    >
+      <>
+        {info && <AppText style={styles.info}>{info}</AppText>}
+        <Surface style={[styles.surface, surfaceStyle]}>{children}</Surface>
+      </>
+    </TouchableHighlight>
+  );
+}
+
+const styles = StyleSheet.create({
+  surface: {
+    alignItems: 'center',
+    elevation: 5,
+    borderRadius: 10,
+    padding: 5,
+  },
+  container: {
+    marginHorizontal: 5,
+  },
+  info: {
+    fontSize: 15,
+    alignSelf: 'flex-start',
+    marginLeft: 20,
+    fontWeight: 'bold',
+  },
+});
