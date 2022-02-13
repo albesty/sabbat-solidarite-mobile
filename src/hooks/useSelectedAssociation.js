@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { getSelectedAssociationEngagements } from '../api/services/engagementServices';
 import {
   getAllCotisations,
   getAssoMembers,
@@ -60,28 +61,102 @@ export default function useSelectedAssociation() {
         totalCotisationsMontant += cotis.montant;
       });
     }
-    return { nombreCotisations, totalCotisationsMontant };
+    return { memberCotisations, nombreCotisations, totalCotisationsMontant };
   };
 
-  const notPayedCompter = (member) => {
-    let compter = 0;
-    if (member) {
-      const memberCotisation = listCotisations[member.id];
-      if (memberCotisation) {
-        const notPayedArray = associationCotisations.filter(
-          (cotis) => !memberCotisation.some((select) => select.id === cotis.id)
-        );
-        if (notPayedArray && notPayedArray.length > 0) compter = notPayedArray.length;
-      }
+  const getSelectedMembersAllCotisations = () => {
+    let allMembersTotalCotisations = 0;
+    let allMembersMontantCotisations = 0;
+    const allMembers = selectedAssoState.associationMembers;
+    allMembers.forEach((member) => {
+      const memberTotalCotis = getMemberCotisationsInfo(member.member.id).nombreCotisations;
+      const memberMontantCotisations = getMemberCotisationsInfo(
+        member.member.id
+      ).totalCotisationsMontant;
+      allMembersTotalCotisations += memberTotalCotis;
+      allMembersMontantCotisations += memberMontantCotisations;
+    });
+    return { allMembersMontantCotisations, allMembersTotalCotisations };
+  };
+
+  const getSelectedAssoMembersEngagements = async (associationId) => {
+    let errorState = null;
+    const response = await getSelectedAssociationEngagements({ associationId: associationId });
+    if (!response.ok) {
+      errorState = response.data;
+      alert('Erreur: impossible de charger les engagements des membres.');
     }
-
-    return compter;
+    dispatchSelectedAsso({ type: selectedAssoActions.all_engagements, engagements: response.data });
+    return errorState;
+  };
+  const getSelectedAssoCurrentMembers = () => {
+    const allMembers = selectedAssoState.associationMembers;
+    let actifMembers = [];
+    let inactifMembers = [];
+    const actifMembersTab = allMembers.filter(
+      (memb) => memb.member.relation.toLowerCase() !== 'ondemand'
+    );
+    if (actifMembersTab) actifMembers = actifMembersTab;
+    const inactifMembersTab = allMembers.filter(
+      (memb) => memb.member.relation.toLowerCase() !== 'member'
+    );
+    if (inactifMembersTab) inactifMembers = inactifMembersTab;
+    return { actifMembers, inactifMembers };
   };
 
+  const getSelectedAssoEngagementsTotals = () => {
+    const allValidEngagements = selectedAssoState.associationEngagements.filter(
+      (engage) => engage.accord === true
+    );
+    let totalMontant = 0;
+    allValidEngagements.forEach((engage) => {
+      totalMontant += engage.montant;
+    });
+    return { nombreTotal: allValidEngagements.length, totalMontant };
+  };
+
+  const getSelectedAssociationFundInfos = () => {
+    let investAmount = 0;
+    let gainAmount = 0;
+    let depenseAmount = 0;
+    let quotiteAmount = 0;
+    const validInvestEngagements = selectedAssoState.associationEngagements.filter(
+      (engage) => engage.accord === true && engage.typeEngagement.toLowerCase() === 'remboursable'
+    );
+    validInvestEngagements.forEach((engagement) => {
+      investAmount += engagement.montant;
+    });
+    const validDepenseEngagements = selectedAssoState.associationEngagements.filter(
+      (engage) => engage.accord === true && engage.typeEngagement.toLowerCase() !== 'remboursable'
+    );
+
+    validDepenseEngagements.forEach((item) => {
+      depenseAmount += item.montant;
+    });
+
+    const gainEngagements = selectedAssoState.associationEngagements.filter(
+      (engage) => engage.accord === true && engage.statut.toLowerCase === 'ended'
+    );
+    gainEngagements.forEach((engage) => {
+      gainAmount += engage.interetMontant;
+    });
+
+    const securityAmount =
+      (selectedAssoState.selectedAssociation.solde *
+        selectedAssoState.selectedAssociation.seuilSecurite) /
+      100;
+    quotiteAmount = Math.round(selectedAssoState.selectedAssociation.solde - securityAmount);
+    return { investAmount, gainAmount, depenseAmount, quotiteAmount };
+  };
   return {
     getselectedAssoMembers,
     getSelectedAssoMembersCotisations,
     getSelectedAssoAllCotisations,
     getMemberCotisationsInfo,
+    getSelectedMembersAllCotisations,
+    getSelectedAssoCurrentMembers,
+    getSelectedAssoMembersEngagements,
+    getSelectedAssoEngagementsTotals,
+    getSelectedAssociationFundInfos,
   };
 }

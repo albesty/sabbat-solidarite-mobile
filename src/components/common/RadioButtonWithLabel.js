@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginVertical: 20,
+    justifyContent: 'flex-start',
+    marginBottom: 20,
   },
   flagInfoContainer: {
     marginLeft: 20,

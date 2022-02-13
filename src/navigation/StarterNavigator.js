@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
@@ -14,9 +14,11 @@ import AssociationDetailScreen from '../screens/association/AssociationDetailScr
 import UserCompteNavigator from './UserCompteNavigator';
 import TransactionNavigator from './TransactionNavigator';
 import AssociationTabNavigator from './AssociationTabNavigator';
+import { AuthContext } from '../contexts/AuthContext';
 
 const StarterStack = createStackNavigator();
 export default function StarterNavigator({ navigation }) {
+  const { state } = useContext(AuthContext);
   const handleLogout = () => {
     navigation.navigate(routes.WELCOME);
   };
@@ -39,8 +41,9 @@ export default function StarterNavigator({ navigation }) {
         options={{
           headerLeft: () => (
             <UserAvatar
+              user={state.user}
               loadingContainer={styles.loadingContainer}
-              onPress={() => navigation.navigate('User')}
+              onPress={() => navigation.navigate(routes.USER)}
             />
           ),
           headerTitle: () => null,
@@ -71,7 +74,7 @@ export default function StarterNavigator({ navigation }) {
         })}
       />
       <StarterStack.Screen
-        name="User"
+        name={routes.USER}
         component={UserCompteNavigator}
         options={{
           headerShown: false,

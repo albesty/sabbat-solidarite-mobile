@@ -5,7 +5,8 @@ import AppText from './AppText';
 export default function AppLabelValue({ label, value, labelStyle, valueStyle }) {
   return (
     <View style={styles.container}>
-      <AppText style={labelStyle}>{label}</AppText>
+      <AppText style={[styles.label, labelStyle]}>{label}</AppText>
+
       <AppText style={valueStyle}>{value}</AppText>
     </View>
   );
@@ -16,5 +17,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  label: {
+    fontWeight: 'bold',
   },
 });

@@ -112,6 +112,8 @@ export default function CompteScreen({ route, navigation }) {
   };
 
   const handleSaveAvatar = async (image) => {
+    let newUser = { ...currentUser, avatar: image.url };
+    setCurrentUser(newUser);
     await handleSaveImages(image);
   };
 
@@ -142,25 +144,26 @@ export default function CompteScreen({ route, navigation }) {
         <View style={styles.avatarContainer}>
           <View style={styles.avatarLoadingContainer}>
             <UserAvatar
+              user={currentUser}
               loadingContainer={styles.avatarLoading}
-              avatar={currentUser.avatar}
               avatarStyle={styles.avatar}
             />
             {uploadingAvatar && (
               <UploaderModal style={styles.avatarLoading} progress={uploadAvatarProgress} />
             )}
+            {!uploadingAvatar && (
+              <AppIconButton
+                showInfo={false}
+                onPress={() => setImageModalVisible(true)}
+                size={35}
+                icon="camera"
+                style={styles.camera}
+              />
+            )}
           </View>
           <AppText style={{ marginVertical: 10 }}>
             {currentUser.username ? currentUser.username : currentUser.email}
           </AppText>
-          {!uploadingAvatar && (
-            <AppIconButton
-              onPress={() => setImageModalVisible(true)}
-              size={35}
-              icon="camera"
-              style={styles.camera}
-            />
-          )}
         </View>
         <AppSpacer />
         <AppSpacer />
@@ -216,67 +219,84 @@ export default function CompteScreen({ route, navigation }) {
           title="Identification"
           left={(props) => <List.Icon {...props} icon="identifier" />}
         >
-          <View style={styles.pieceContainer}>
-            {pieces.length === 0 && (
-              <AppText style={{ fontSize: 15 }}>
-                Vos documents d'Identification s'afficheront ici.
-              </AppText>
-            )}
-            {pieces.length > 0 && (
-              <Image
-                onLoadStart={() => setPiecesLoading(true)}
-                onLoadEnd={() => setPiecesLoading(false)}
-                style={styles.pieces}
-                source={{
-                  uri:
-                    isPiece && permutPiece
-                      ? pieces[1].url
-                      : isPiece && !permutPiece
-                      ? pieces[0].url
-                      : !isPiece && !permutPiece
-                      ? pieces[0]
-                      : pieces[1],
+          <View>
+            <View style={styles.pieceContainer}>
+              {pieces.length === 0 && (
+                <AppText style={{ fontSize: 15 }}>
+                  Vos documents d'Identification s'afficheront ici.
+                </AppText>
+              )}
+              {pieces.length > 0 && (
+                <Image
+                  onLoadStart={() => setPiecesLoading(true)}
+                  onLoadEnd={() => setPiecesLoading(false)}
+                  style={styles.pieces}
+                  source={{
+                    uri:
+                      isPiece && permutPiece
+                        ? pieces[1].url
+                        : isPiece && !permutPiece
+                        ? pieces[0].url
+                        : !isPiece && !permutPiece
+                        ? pieces[0]
+                        : pieces[1],
+                  }}
+                />
+              )}
+
+              {validePieces && !showLoadingPieceContainer && (
+                <View style={styles.valideStyle}>
+                  <AppIconButton
+                    onPress={() => {
+                      setPieces(currentUser.pieces || []);
+                      setValidePieces(false);
+                    }}
+                    style={{ backgroundColor: colors.rougeBordeau }}
+                    icon="cancel"
+                  />
+                  <AppIconButton
+                    onPress={handleSavePieces}
+                    style={{ backgroundColor: colors.vert, marginLeft: 50 }}
+                    icon="check"
+                  />
+                </View>
+              )}
+              {showLoadingPieceContainer && (
+                <View style={styles.piecesLoadingContainer}>
+                  {piecesLoading && <AppAnimation />}
+                  {uploadingPiece && <UploaderModal progress={uploadPieceProgress} />}
+                </View>
+              )}
+            </View>
+            <View style={styles.pieceButtons}>
+              {pieces.length > 0 && !showLoadingPieceContainer && (
+                <TouchableOpacity
+                  onPress={() => setPermutPiece(!permutPiece)}
+                  style={styles.pieceCamera}
+                >
+                  <MaterialCommunityIcons
+                    style={styles.pieceInterneCamera}
+                    name="update"
+                    size={30}
+                    color={colors.white}
+                  />
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                onPress={() => {
+                  setIsPiece(true);
+                  setImageModalVisible(true);
                 }}
-              />
-            )}
-            {pieces.length > 0 && !showLoadingPieceContainer && (
-              <AppIconButton
-                onPress={() => setPermutPiece(!permutPiece)}
-                color={colors.rougeBordeau}
-                icon="update"
-                size={30}
-                style={styles.retourneButton}
-              />
-            )}
-            {validePieces && !showLoadingPieceContainer && (
-              <View style={styles.valideStyle}>
-                <AppIconButton
-                  onPress={() => setPieces(currentUser.pieces || [])}
-                  style={{ backgroundColor: colors.rougeBordeau }}
-                  icon="cancel"
+                style={styles.pieceCamera}
+              >
+                <MaterialCommunityIcons
+                  style={styles.pieceInterneCamera}
+                  name="camera"
+                  size={30}
+                  color={colors.white}
                 />
-                <AppIconButton
-                  onPress={handleSavePieces}
-                  style={{ backgroundColor: colors.vert, marginLeft: 50 }}
-                  icon="check"
-                />
-              </View>
-            )}
-            {showLoadingPieceContainer && (
-              <View style={styles.piecesLoadingContainer}>
-                {piecesLoading && <AppAnimation />}
-                {uploadingPiece && <UploaderModal progress={uploadPieceProgress} />}
-              </View>
-            )}
-            <AppIconButton
-              onPress={() => {
-                setIsPiece(true);
-                setImageModalVisible(true);
-              }}
-              size={35}
-              icon="camera"
-              style={[styles.camera, styles.pieceCamera]}
-            />
+              </TouchableOpacity>
+            </View>
           </View>
         </List.Accordion>
         <List.Item
@@ -325,8 +345,8 @@ const styles = StyleSheet.create({
   camera: {
     backgroundColor: colors.leger,
     position: 'absolute',
-    bottom: 40,
-    right: -30,
+    bottom: 0,
+    left: 68,
   },
   contentStyle: {
     paddingBottom: 50,
@@ -358,15 +378,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  pieceCamera: {
-    top: 5,
+  pieceButtons: {
     left: 5,
+    top: 10,
+    position: 'absolute',
+  },
+  pieceCamera: {
+    backgroundColor: colors.leger,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    marginVertical: 5,
+  },
+  pieceInterneCamera: {
+    position: 'absolute',
   },
   pieceContainer: {
     height: 'auto',
     minHeight: 100,
     marginHorizontal: 20,
     alignItems: 'center',
+    backgroundColor: colors.rougeBordeaus,
   },
   infoPiece: {
     flexDirection: 'row',

@@ -4,7 +4,7 @@ import { Surface } from 'react-native-paper';
 import { colors, fonts } from '../../utils/styles';
 import AppText from './AppText';
 
-export default function AppSurface({ style, onPress, info, surfaceStyle, children }) {
+export default function AppSurface({ style, onPress, info, infoStyle, surfaceStyle, children }) {
   return (
     <TouchableHighlight
       underlayColor={colors.leger}
@@ -12,7 +12,7 @@ export default function AppSurface({ style, onPress, info, surfaceStyle, childre
       onPress={onPress}
     >
       <>
-        {info && <AppText style={styles.info}>{info}</AppText>}
+        {info && <AppText style={[styles.info, infoStyle]}>{info}</AppText>}
         <Surface style={[styles.surface, surfaceStyle]}>{children}</Surface>
       </>
     </TouchableHighlight>
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 15,
     alignSelf: 'flex-start',
-    marginLeft: 20,
+    marginLeft: 10,
     fontWeight: 'bold',
   },
 });

@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
 import UserAvatar from '../user/UserAvatar';
 import AppText from '../common/AppText';
 import AppSurface from '../common/AppSurface';
-import AppLabelValue from '../common/AppLabelValue';
 import AppSpacer from '../common/AppSpacer';
 import useAssociation from '../../hooks/useAssociation';
 
@@ -29,15 +28,17 @@ export default function MemberItem({
       <AppText style={[styles.moreInfo, moreInfoStyle]}>{moreInfo}</AppText>
 
       <View style={[styles.container, style]}>
-        <UserAvatar avatarStyle={styles.avatar} avatar={member.avatar} />
+        <UserAvatar avatarStyle={styles.avatar} user={member} />
         <View>
           <AppText style={styles.info}>{member.username ? member.username : member.email}</AppText>
-          <AppText style={styles.statut}>{member.member.statut}</AppText>
+          <AppText style={styles.statut}>
+            {member.member.statut === 'new' ? 'Nouveau' : member.member.statut}
+          </AppText>
         </View>
       </View>
-      <AppSpacer />
       {showTotal && (
         <View style={styles.total}>
+          <AppSpacer />
           <AppText style={styles.totalText}>({total}) </AppText>
           <AppText style={styles.totalText}>{formatFonds(montant)}</AppText>
         </View>

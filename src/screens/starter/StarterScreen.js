@@ -15,6 +15,7 @@ import AppSpacer from '../../components/common/AppSpacer';
 import AppSeparator from '../../components/common/AppSeparator';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
+import { colors } from '../../utils/styles';
 
 export default function StarterScreen({ navigation }) {
   const { memberState } = useContext(MemberContext);
@@ -175,11 +176,12 @@ const styles = StyleSheet.create({
   linksContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 20,
+    marginBottom: 20,
+    backgroundColor: colors.rougeBordeau,
   },
   titleStyle: {
-    fontSize: 10,
-    paddingVertical: 5,
+    paddingVertical: 10,
+    color: colors.white,
   },
   links: {
     width: '40%',

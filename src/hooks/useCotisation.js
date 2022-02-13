@@ -21,7 +21,6 @@ export default function useCotisation() {
     if (selectedMemberCotisations?.length) {
       for (let i = 0; i < selectedMemberCotisations.length; i++) {
         const currentMemberCotis = selectedMemberCotisations[i];
-        console.log('current member cotisation............;;;;;;  ', currentMemberCotis);
         memberCotisMontant += currentMemberCotis.montant;
       }
     }
@@ -50,7 +49,11 @@ export default function useCotisation() {
       const notPayedArray = selectedAssoState.allCotisations.filter(
         (cotis) => !connectedMemberCotisations.some((select) => select.id === cotis.id)
       );
-      if (notPayedArray && notPayedArray.length > 0) compter = notPayedArray.length;
+      if (notPayedArray && notPayedArray.length > 0) {
+        compter = notPayedArray.length;
+      }
+    } else {
+      compter = selectedAssoState.allCotisations.length;
     }
     return compter;
   };

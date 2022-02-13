@@ -8,7 +8,7 @@ export default function AppSeparator({ style }) {
 
 const styles = StyleSheet.create({
   separator: {
-    width: '80%',
+    width: '95%',
     alignSelf: 'center',
     height: 1,
     backgroundColor: colors.leger,

@@ -11,7 +11,8 @@ import AppButton from '../common/AppButton';
 import { memberActions } from '../../reducers/memberReducer';
 import AppWaitInfo from '../common/AppWaitInfo';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
+import AppIconButton from '../common/AppIconButton';
+import AppSpacer from '../common/AppSpacer';
 export default function AssociationCard({
   onPress,
   coverStyle,
@@ -51,7 +52,10 @@ export default function AssociationCard({
   return (
     <TouchableWithoutFeedback onPress={handleValidPress}>
       <Card onPress={onPress} elevation={5} mode="elevated" style={[styles.card, cardStyle]}>
-        <Card.Cover style={coverStyle} source={require('../../../assets/main_dans_la_main.jpg')} />
+        <Card.Cover
+          style={[{ height: 150 }, coverStyle]}
+          source={require('../../../assets/main_dans_la_main.jpg')}
+        />
         <Card.Content>
           <Card.Title
             title={association.nom}
@@ -63,15 +67,12 @@ export default function AssociationCard({
         </Card.Content>
         {showActions && (
           <Card.Actions>
+            <AppSpacer />
+            <AppSpacer />
             {adhesionState === 'member' ? (
               <View style={styles.contentContainer}>
-                <AppButton
-                  style={styles.stopButton}
-                  mode="outlined"
-                  title="Quitter"
-                  labelStyle={styles.exitButton}
-                />
-                <AppText style={styles.memberStyle}>Déjà membre</AppText>
+                <AppIconButton color={colors.vert} icon="account-group" />
+                <AppText style={styles.memberStyle}>membre</AppText>
               </View>
             ) : adhesionState === 'ondemand' ? (
               <View style={styles.contentContainer}>
@@ -103,7 +104,7 @@ export default function AssociationCard({
 
 const styles = StyleSheet.create({
   card: {
-    margin: 15,
+    margin: 10,
   },
   subtitle: {
     fontSize: 15,
@@ -122,7 +123,6 @@ const styles = StyleSheet.create({
   },
   memberStyle: {
     color: colors.vert,
-    marginLeft: 10,
   },
   checking: {
     color: colors.bleuFbi,
@@ -136,6 +136,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    position: 'absolute',
+    right: 10,
+    bottom: 0,
   },
   stopButton: {
     width: '40%',

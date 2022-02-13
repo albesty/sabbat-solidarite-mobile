@@ -7,40 +7,25 @@ import useSelectedAssociation from '../../hooks/useSelectedAssociation';
 import MemberItem from '../../components/member/MemberItem';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import AppWaitInfo from '../../components/common/AppWaitInfo';
-import useAuth from '../../hooks/useAuth';
 import useCotisation from '../../hooks/useCotisation';
 import { colors } from '../../utils/styles';
 
 export default function EtatCotisationScreen({ navigation }) {
-  const { isAdmin, isModerator } = useAuth();
   const { selectedAssoState } = useContext(SelectedAssociationContext);
   const { isMemberUpToCotisationDate, notPayedCompter } = useCotisation();
-  const { getSelectedAssoMembersCotisations, getMemberCotisationsInfo } = useSelectedAssociation();
+  const { getMemberCotisationsInfo, getSelectedAssoCurrentMembers } = useSelectedAssociation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const getMembersCotisations = useCallback(async () => {
-    setLoading(true);
-    const errorState = await getSelectedAssoMembersCotisations(
-      selectedAssoState.selectedAssociation.id
-    );
-    if (errorState) setError(errorState);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    console.log('not payed ', notPayedCompter());
-    getMembersCotisations();
-  }, []);
 
   return (
     <>
       <FlatList
         contentContainerStyle={styles.contentContainerStyle}
-        data={selectedAssoState.associationMembers}
+        data={getSelectedAssoCurrentMembers().actifMembers}
         keyExtractor={(item) => item.id + 'cotisation'}
         renderItem={({ item }) => (
           <MemberItem
+            onPress={() => navigation.navigate(routes.MEMBER_COTISATION_DETAIL, item)}
             moreInfoStyle={{
               color: isMemberUpToCotisationDate(item.member.id) ? colors.vert : colors.rougeBordeau,
             }}

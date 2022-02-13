@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';
 import routes from './routes';
@@ -45,5 +44,3 @@ export default function UserCompteNavigator() {
     </UserCompteStack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({});

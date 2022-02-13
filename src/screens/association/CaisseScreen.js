@@ -20,14 +20,18 @@ export default function CaisseScreen({ route, navigation }) {
   const { selectedAssoState } = useContext(SelectedAssociationContext);
   const [showFunds, setShowFunds] = useState(false);
   const { formatFonds } = useAssociation();
-  const { getselectedAssoMembers, getSelectedAssoAllCotisations } = useSelectedAssociation();
-  const [currentAssociation, setCurrentAssociation] = useState({});
-  const [currentMembers, setCurrentMembers] = useState([]);
+  const {
+    getSelectedAssoMembersCotisations,
+    getselectedAssoMembers,
+    getSelectedAssoAllCotisations,
+    getSelectedMembersAllCotisations,
+    getSelectedAssoCurrentMembers,
+    getSelectedAssoMembersEngagements,
+    getSelectedAssoEngagementsTotals,
+    getSelectedAssociationFundInfos,
+  } = useSelectedAssociation();
   const [loading, setLoading] = useState(false);
 
-  const getAllCotisations = () => {
-    return 1000000;
-  };
   const getAllInvests = () => {
     return 1000000;
   };
@@ -45,8 +49,18 @@ export default function CaisseScreen({ route, navigation }) {
     setLoading(true);
     await getselectedAssoMembers(selectedAssociation.id);
     await getSelectedAssoAllCotisations(selectedAssociation.id);
+    await getSelectedAssoMembersCotisations(selectedAssociation.id);
+    await getSelectedAssoMembersEngagements(selectedAssociation.id);
     setLoading(false);
   });
+
+  const handleGoToMemberDetail = () => {
+    navigation.navigate(routes.MEMBER, {
+      screen: routes.MEMBER_DETAIL,
+      params: selectedAssoState.connectedMember,
+    });
+  };
+
   useEffect(() => {
     getAssociationMembers();
   }, []);
@@ -84,35 +98,35 @@ export default function CaisseScreen({ route, navigation }) {
                 labelStyle={styles.allLabel}
                 valueStyle={styles.allValue}
                 label="Cotisations"
-                value={formatFonds(getAllCotisations())}
+                value={formatFonds(getSelectedMembersAllCotisations().allMembersMontantCotisations)}
               />
               <AppLabelValue
                 valueStyle={[styles.allValue, styles.invest]}
                 labelStyle={[styles.allLabel, styles.invest]}
                 label="Investissements"
-                value={formatFonds(getAllInvests())}
+                value={formatFonds(getSelectedAssociationFundInfos().investAmount)}
               />
               <AppLabelValue
                 valueStyle={[styles.allValue, styles.gain]}
                 labelStyle={[styles.allLabel, styles.gain]}
                 label="Gains"
-                value={formatFonds(getAllGains())}
+                value={formatFonds(getSelectedAssociationFundInfos().gainAmount)}
               />
               <AppLabelValue
                 valueStyle={[styles.allValue, styles.depense]}
                 labelStyle={[styles.allLabel, styles.depense]}
                 label="Depenses"
-                value={formatFonds(getAllDepenses())}
+                value={formatFonds(getSelectedAssociationFundInfos().depenseAmount)}
               />
               <AppLabelValue
                 valueStyle={[styles.allValue, styles.quotite]}
                 labelStyle={(styles.allLabel, styles.quotite)}
                 label="Quotité"
-                value={formatFonds(getAllQuotite())}
+                value={formatFonds(getSelectedAssociationFundInfos().quotiteAmount)}
               />
               <AppSpacer />
               <AppButton
-                onPress={() => navigation.navigate(routes.MEMBER_COMPTE)}
+                onPress={handleGoToMemberDetail}
                 style={styles.selfMemberButton}
                 mode="outlined"
                 title="Compte membre"
@@ -123,20 +137,36 @@ export default function CaisseScreen({ route, navigation }) {
         </AppSurface>
 
         <AppButton
+          onPress={() => navigation.navigate(routes.MEMBER, { screen: routes.LIST_MEMBER })}
           style={styles.buttons}
           mode="outlined"
-          title={`Membres (${selectedAssoState.associationMembers.length})`}
+          title={`Membres (${getSelectedAssoCurrentMembers().actifMembers.length})`}
         />
         <AppSpacer />
         <AppButton
+          onPress={() => navigation.navigate(routes.COTISATION, { screen: routes.ETAT_COTISATION })}
           style={styles.buttons}
           mode="outlined"
-          title={`Cotisations (${selectedAssoState.allCotisations.length})`}
+          title={`Cotisations (${
+            getSelectedMembersAllCotisations().allMembersTotalCotisations
+          }) ${formatFonds(getSelectedMembersAllCotisations().allMembersMontantCotisations)}`}
         />
         <AppSpacer />
-        <AppButton style={styles.buttons} mode="outlined" title="Engagements" />
+        <AppButton
+          onPress={() => navigation.navigate(routes.ENGAGEMENT)}
+          style={styles.buttons}
+          mode="outlined"
+          title={`Engagements (${getSelectedAssoEngagementsTotals().nombreTotal}) ${formatFonds(
+            getSelectedAssoEngagementsTotals().totalMontant
+          )}`}
+        />
         <AppSpacer />
-        <AppButton style={styles.buttons} title="Nouvels adhérants" mode="text" />
+        <AppButton
+          onPress={() => navigation.navigate(routes.NEW_MEMBER)}
+          style={styles.buttons}
+          title={`Nouveaux membres (${getSelectedAssoCurrentMembers().inactifMembers.length})`}
+          mode="outlined"
+        />
         <AppSpacer />
       </ScrollView>
       {loading && <AppActivityIndicator />}

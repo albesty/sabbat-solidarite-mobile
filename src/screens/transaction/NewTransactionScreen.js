@@ -130,6 +130,7 @@ export default function NewTransactionScreen({ route, navigation }) {
             </AppForm>
           </View>
         )}
+        <AppSpacer />
         <RadioButtonWithLabel
           label="Carte de crédit"
           onPress={() => setOnCreditCardSelect(!onCreditCardSelect)}

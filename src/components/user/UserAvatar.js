@@ -1,28 +1,20 @@
 import { StyleSheet, TouchableWithoutFeedback, View, Image } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { colors } from '../../utils/styles';
 import { AuthContext } from '../../contexts/AuthContext';
 import AppAnimation from '../common/AppAnimation';
 
-export default function UserAvatar({ onPress, avatarStyle, avatar = null, loadingContainer }) {
-  const { state } = useContext(AuthContext);
-  const stateAvatar = state.user?.avatar;
-  const isStateAvatar = stateAvatar && stateAvatar.length > 0;
+export default function UserAvatar({ onPress, avatarStyle, user, loadingContainer }) {
   const [loading, setLoading] = useState(false);
 
+  const isUserAvatar = user && user.avatar;
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={{ paddingHorizontal: 10, borderColor: colors.leger }}>
         <Image
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
-          source={
-            avatar
-              ? { uri: avatar }
-              : isStateAvatar
-              ? { uri: stateAvatar }
-              : require('../../../assets/silhouette.png')
-          }
+          source={isUserAvatar ? { uri: user.avatar } : require('../../../assets/silhouette.png')}
           style={[styles.avatar, avatarStyle]}
         />
         {loading && (

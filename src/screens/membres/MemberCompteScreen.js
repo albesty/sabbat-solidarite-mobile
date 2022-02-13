@@ -4,7 +4,7 @@ import React from 'react';
 export default function MemberCompteScreen() {
   return (
     <View>
-      <Text>Compte membre</Text>
+      <Text>MemberCompteScreen</Text>
     </View>
   );
 }

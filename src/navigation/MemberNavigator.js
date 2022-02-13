@@ -33,9 +33,12 @@ export default function MemberNavigator() {
       <MembreStack.Screen
         name={routes.MEMBER_DETAIL}
         component={MemberDetailScreen}
-        options={{
-          headerTitle: () => <NavigationTitle title="Info Compte" />,
-        }}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <HeaderButton title="List" onPress={() => navigation.navigate(routes.LIST_MEMBER)} />
+          ),
+          headerTitle: () => <NavigationTitle title="Details Compte membre" />,
+        })}
       />
       <MembreStack.Screen
         name={routes.MEMBER_COMPTE}

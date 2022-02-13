@@ -1,13 +1,12 @@
-import { StyleSheet } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import routes from './routes';
-import EngagementScreen from '../screens/association/EngagementScreen';
 import { colors } from '../utils/styles';
 import AppTabBarIcon from '../components/navigation/AppTabBarIcon';
 import DashboardNavigator from './DashboardNavigator';
 import CotisationNavigator from './CotisationNavigator';
 import MemberNavigator from './MemberNavigator';
+import EngagementNavigator from './EngagementNavigator';
 
 const AssociationTab = createBottomTabNavigator();
 
@@ -57,7 +56,7 @@ export default function AssociationTabNavigator({ route }) {
       />
       <AssociationTab.Screen
         name={routes.ENGAGEMENT}
-        component={EngagementScreen}
+        component={EngagementNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <AppTabBarIcon name="card-account-details" size={size} color={color} />
@@ -69,5 +68,3 @@ export default function AssociationTabNavigator({ route }) {
     </AssociationTab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({});

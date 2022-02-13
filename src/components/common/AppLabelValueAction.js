@@ -8,6 +8,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { editUserInfo } from '../../api/services/authServices';
 import { actions } from '../../reducers/authReducer';
 import AppAnimation from './AppAnimation';
+import AppLabelAndValueSimple from './AppLabelAndValueSimple';
 
 export default function AppLabelValueAction({ label }) {
   const { state, dispatch } = useContext(AuthContext);
@@ -49,10 +50,14 @@ export default function AppLabelValueAction({ label }) {
     <>
       <View style={styles.container}>
         <View>
-          <AppText style={styles.label}>{label}</AppText>
+          {/* <AppText style={styles.label}>{label}</AppText>
           <AppText style={styles.value}>
             {currentLabelValue ? currentLabelValue : 'editer pour ajouter'}
-          </AppText>
+          </AppText> */}
+          <AppLabelAndValueSimple
+            label={label}
+            value={currentLabelValue ? currentLabelValue : 'editer pour ajouter'}
+          />
           {editing && (
             <View style={styles.inputContainer}>
               <TextInput

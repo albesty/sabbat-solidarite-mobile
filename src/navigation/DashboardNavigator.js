@@ -5,6 +5,7 @@ import CaisseScreen from '../screens/association/CaisseScreen';
 import { colors } from '../utils/styles';
 import HeaderButton from '../components/navigation/HeaderButton';
 import NavigationTitle from '../components/navigation/NavigationTitle';
+import NewMemberScreen from '../screens/association/NewMemberScreen';
 
 const DashboardStack = createStackNavigator();
 
@@ -28,6 +29,13 @@ export default function DashboardNavigator({ route }) {
         component={CaisseScreen}
         options={{
           headerTitle: () => <NavigationTitle title="Tableau de bord" />,
+        }}
+      />
+      <DashboardStack.Screen
+        name={routes.NEW_MEMBER}
+        component={NewMemberScreen}
+        options={{
+          headerTitle: () => <NavigationTitle title="Nouveaux membres" />,
         }}
       />
     </DashboardStack.Navigator>

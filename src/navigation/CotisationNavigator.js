@@ -9,6 +9,7 @@ import HeaderButton from '../components/navigation/HeaderButton';
 import NavigationTitle from '../components/navigation/NavigationTitle';
 import EtatCotisationScreen from '../screens/cotisation/EtatCotisationScreen';
 import PayCotisationScreen from '../screens/cotisation/PayCotisationScreen';
+import MemberCotisationDetailScreen from '../screens/cotisation/MemberCotisationDetailScreen';
 
 const CotisationStack = createStackNavigator();
 
@@ -52,6 +53,17 @@ export default function CotisationNavigator() {
         options={{
           headerTitle: () => <NavigationTitle title="Payement de cotisation" />,
         }}
+      />
+      <CotisationStack.Screen
+        name={routes.MEMBER_COTISATION_DETAIL}
+        component={MemberCotisationDetailScreen}
+        options={({ route }) => ({
+          headerTitle: () => (
+            <NavigationTitle
+              title={`${route.params.username ? route.params.username : route.params.email}`}
+            />
+          ),
+        })}
       />
     </CotisationStack.Navigator>
   );
