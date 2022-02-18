@@ -5,6 +5,18 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "sabbat group",
+            "project": "sabbat-solidarite",
+            "authToken": "8b97b1247c5349359d9821c93d2d3d9fc449d1d97d0e44e79b2b4fc1628e302c"
+          }
+        }
+      ]
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -27,6 +39,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "sentry-expo"
+    ]
   }
 }

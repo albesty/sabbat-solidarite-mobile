@@ -1,4 +1,12 @@
-import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  Image,
+  BackHandler,
+} from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppImagePicker from '../../components/common/AppImagePicker';
@@ -22,7 +30,7 @@ import routes from '../../navigation/routes';
 export default function CompteScreen({ route, navigation }) {
   const { state, dispatch } = useContext(AuthContext);
   const selectedUser = route.params ? route.params : state.user;
-  const { formatFonds } = useAssociation();
+  const { formatFonds, showLargeImage } = useAssociation();
   const { uploader } = useUploadImage();
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(selectedUser || {});
@@ -144,6 +152,7 @@ export default function CompteScreen({ route, navigation }) {
         <View style={styles.avatarContainer}>
           <View style={styles.avatarLoadingContainer}>
             <UserAvatar
+              onPress={() => showLargeImage(currentUser.avatar)}
               user={currentUser}
               loadingContainer={styles.avatarLoading}
               avatarStyle={styles.avatar}
@@ -179,6 +188,7 @@ export default function CompteScreen({ route, navigation }) {
           <AppSpacer />
           <AppSpacer />
           <AppButton
+            labelStyle={styles.rechargeLabel}
             onPress={() =>
               navigation.navigate(routes.TRANSACTION, {
                 screen: routes.NEW_TRANSACTION,
@@ -317,6 +327,11 @@ export default function CompteScreen({ route, navigation }) {
           left={(props) => <List.Icon {...props} icon="cog" />}
           title="Paramètres de connexion"
         />
+        <List.Item
+          onPress={() => navigation.navigate(routes.CONTACT)}
+          left={(props) => <List.Icon {...props} icon="help-circle" />}
+          title="Besoin d'aide?"
+        />
       </ScrollView>
 
       <AppImagePicker
@@ -346,7 +361,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.leger,
     position: 'absolute',
     bottom: 0,
-    left: 68,
+    right: -40,
   },
   contentStyle: {
     paddingBottom: 50,
@@ -369,6 +384,7 @@ const styles = StyleSheet.create({
   rechargeButton: {
     marginVertical: 10,
     width: '80%',
+    backgroundColor: colors.white,
   },
   retirerButton: {
     position: 'absolute',
@@ -410,6 +426,10 @@ const styles = StyleSheet.create({
   pieces: {
     height: 150,
     width: '100%',
+  },
+
+  rechargeLabel: {
+    paddingVertical: 5,
   },
   retourneButton: {
     position: 'absolute',

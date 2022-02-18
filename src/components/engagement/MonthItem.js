@@ -34,31 +34,38 @@ export default function MonthItem({ month, monthTotal, monthAmount, monthCotisat
         />
       </TouchableOpacity>
       {isActive && (
-        <View style={styles.activeContent}>
-          {monthCotisations.map((item) => (
-            <View style={styles.monthItem} key={item.id.toString()}>
-              <AppText style={styles.motif} numberOfLines={2}>
-                {item.motif}
-              </AppText>
-              <AppLabelValue
-                labelStyle={styles.labelStyle}
-                label="Montant demandé"
-                value={formatFonds(item.montant)}
-              />
-              <AppLabelValue
-                labelStyle={styles.labelStyle}
-                label="Montant payé"
-                value={formatFonds(item.member_cotisation.montant)}
-              />
-              <AppLabelValue
-                labelStyle={styles.labelStyle}
-                label="Date payement"
-                value={formatDate(item.member_cotisation.paymentDate)}
-              />
-              <AppSpacer />
-              <AppSeparator />
+        <View style={styles.cotisationContainer}>
+          {monthCotisations.length > 0 && (
+            <View style={styles.activeContent}>
+              {monthCotisations.map((item) => (
+                <View style={styles.monthItem} key={item.id.toString()}>
+                  <AppText style={styles.motif} numberOfLines={2}>
+                    {item.motif}
+                  </AppText>
+                  <AppLabelValue
+                    labelStyle={styles.labelStyle}
+                    label="Montant demandé"
+                    value={formatFonds(item.montant)}
+                  />
+                  <AppLabelValue
+                    labelStyle={styles.labelStyle}
+                    label="Montant payé"
+                    value={formatFonds(item.member_cotisation.montant)}
+                  />
+                  <AppLabelValue
+                    labelStyle={styles.labelStyle}
+                    label="Date payement"
+                    value={formatDate(item.member_cotisation.paymentDate)}
+                  />
+                  <AppSpacer />
+                  <AppSeparator />
+                </View>
+              ))}
             </View>
-          ))}
+          )}
+          {monthCotisations.length === 0 && (
+            <AppText style={styles.emptyCotisation}>Aucune cotisation trouvée.</AppText>
+          )}
         </View>
       )}
     </>
@@ -73,12 +80,19 @@ const styles = StyleSheet.create({
   activeStyle: {
     color: colors.bleuFbi,
   },
+  emptyCotisation: {
+    alignSelf: 'center',
+    paddingVertical: 20,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: 10,
     marginVertical: 10,
+  },
+  cotisationContainer: {
+    backgroundColor: colors.white,
   },
   labelStyle: {
     fontWeight: 'normal',

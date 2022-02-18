@@ -134,7 +134,7 @@ export default function MemberCotisationDetailScreen({ route }) {
           </View>
         </AppSurface>
       </View>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.contentStyles}>
         {months.map((item) => (
           <MonthItem
             monthCotisations={getMonthCotisations(item).monthCotisations}
@@ -157,6 +157,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: '15%',
+  },
+  contentStyles: {
+    paddingVertical: 20,
   },
   header: {
     marginHorizontal: 0,

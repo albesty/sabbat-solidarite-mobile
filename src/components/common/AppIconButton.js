@@ -13,10 +13,10 @@ export default function AppIconButton({
   ...other
 }) {
   return (
-    <View>
+    <>
       <IconButton icon={icon} color={color} size={size} {...other} />
       {showInfo && info > 0 && <AppText style={styles.info}>{info}</AppText>}
-    </View>
+    </>
   );
 }
 

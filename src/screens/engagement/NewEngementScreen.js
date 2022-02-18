@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import AppTimePicker from '../../components/common/AppTimePicker';
@@ -19,8 +19,8 @@ const validEngagement = Yup.object().shape({
 });
 export default function NewEngementScreen() {
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
-  const [engagementType, setEngagementType] = useState('');
-  const [rembourseSelected, setRembourseSelected] = useState(false);
+  const [engagementType, setEngagementType] = useState('remboursable');
+  const [rembourseSelected, setRembourseSelected] = useState(true);
   const [nonRembourseSelected, setNonRembourseSelected] = useState(false);
   const [loading, setLoading] = useState(false);
   const { getSelectedAssociationFundInfos } = useSelectedAssociation();

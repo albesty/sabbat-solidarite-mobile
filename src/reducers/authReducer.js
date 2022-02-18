@@ -3,6 +3,7 @@ export const actions = {
   logout: 'LOGOUT',
   update_info: 'UPDATE_AVATAR',
   update_state: 'UPDATE_STATE',
+  set_push_token: 'DEVICE_PUSH_TOKEN',
 };
 
 export const authReducer = (state, action) => {
@@ -15,6 +16,8 @@ export const authReducer = (state, action) => {
       return { ...state, user: action.updatedUser };
     case actions.update_state:
       return { ...state, updateState: action.updateState };
+    case 'DEVICE_PUSH_TOKEN':
+      return { ...state, devicePushToken: action.token };
     default:
       return state;
   }

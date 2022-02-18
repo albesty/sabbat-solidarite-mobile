@@ -22,7 +22,7 @@ export default function ListMemberScreen({ navigation }) {
                 item.member.relation.toLowerCase() === 'member' ? colors.vert : colors.rougeBordeau,
             }}
             member={item}
-            moreInfo={item.member.relation.toLowerCase() === 'member' ? 'actif' : 'parti'}
+            moreInfo={item.member.relation.toLowerCase() === 'member' ? 'actif' : 'veut quitter'}
           />
         )}
       />

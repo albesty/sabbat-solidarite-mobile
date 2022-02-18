@@ -14,12 +14,14 @@ import routes from '../../navigation/routes';
 import useSelectedAssociation from '../../hooks/useSelectedAssociation';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
+import { getConnectedMemberRoles } from '../../api/services/selectedAssociationServices';
+import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 
 export default function CaisseScreen({ route, navigation }) {
   const selectedAssociation = route.params;
-  const { selectedAssoState } = useContext(SelectedAssociationContext);
+  const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
   const [showFunds, setShowFunds] = useState(false);
-  const { formatFonds } = useAssociation();
+  const { formatFonds, showLargeImage } = useAssociation();
   const {
     getSelectedAssoMembersCotisations,
     getselectedAssoMembers,
@@ -32,25 +34,21 @@ export default function CaisseScreen({ route, navigation }) {
   } = useSelectedAssociation();
   const [loading, setLoading] = useState(false);
 
-  const getAllInvests = () => {
-    return 1000000;
-  };
-  const getAllGains = () => {
-    return 1000000;
-  };
-  const getAllDepenses = () => {
-    return 1000000;
-  };
-  const getAllQuotite = () => {
-    return 1000000;
-  };
-
   const getAssociationMembers = useCallback(async () => {
     setLoading(true);
     await getselectedAssoMembers(selectedAssociation.id);
     await getSelectedAssoAllCotisations(selectedAssociation.id);
     await getSelectedAssoMembersCotisations(selectedAssociation.id);
     await getSelectedAssoMembersEngagements(selectedAssociation.id);
+    if (selectedAssoState.connectedMember.member) {
+      const response = await getConnectedMemberRoles({
+        memberId: selectedAssoState.connectedMember.member.id,
+      });
+      dispatchSelectedAsso({
+        type: selectedAssoActions.connected_member_roles,
+        roles: response.data,
+      });
+    }
     setLoading(false);
   });
 
@@ -61,14 +59,21 @@ export default function CaisseScreen({ route, navigation }) {
     });
   };
 
+  const handleReadReglement = () => {
+    alert(
+      "Aucun reglement trouvé, veuillez rediger votre reglement puis l'envoyer à Sabbat-Solidarité pour la mise à jour."
+    );
+  };
+
   useEffect(() => {
     getAssociationMembers();
   }, []);
 
   return (
     <>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.contentContainerStyle}>
         <AssociationCard
+          handleValidPress={() => showLargeImage(selectedAssociation.avatar)}
           cardStyle={{
             width: '100%',
             margin: 0,
@@ -168,6 +173,14 @@ export default function CaisseScreen({ route, navigation }) {
           mode="outlined"
         />
         <AppSpacer />
+        <AppButton
+          icon="file-pdf"
+          labelStyle={styles.reglementLabel}
+          style={styles.buttons}
+          onPress={handleReadReglement}
+          title="Consulter le reglement."
+          mode="text"
+        />
       </ScrollView>
       {loading && <AppActivityIndicator />}
     </>
@@ -183,7 +196,7 @@ const styles = StyleSheet.create({
     width: '38%',
   },
   button: {
-    backgroundColor: colors.bleuFbi,
+    backgroundColor: colors.rougeBordeau,
     width: 150,
     height: 50,
     borderRadius: 0,
@@ -191,6 +204,7 @@ const styles = StyleSheet.create({
   buttons: {
     width: '90%',
     alignSelf: 'center',
+    backgroundColor: colors.white,
   },
   allValue: {
     fontSize: 15,
@@ -199,6 +213,9 @@ const styles = StyleSheet.create({
   },
   allLabel: {
     fontSize: 15,
+  },
+  contentContainerStyle: {
+    paddingBottom: 30,
   },
   invest: {
     color: 'orange',
@@ -212,9 +229,13 @@ const styles = StyleSheet.create({
   quotite: {
     color: colors.grey,
   },
+  reglementLabel: {
+    color: colors.black,
+  },
   selfMemberButton: {
     marginVertical: 10,
     alignSelf: 'center',
+    backgroundColor: colors.white,
   },
   fonds: {
     fontWeight: 'bold',

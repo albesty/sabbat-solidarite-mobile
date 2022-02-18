@@ -15,6 +15,10 @@ import UserCompteNavigator from './UserCompteNavigator';
 import TransactionNavigator from './TransactionNavigator';
 import AssociationTabNavigator from './AssociationTabNavigator';
 import { AuthContext } from '../contexts/AuthContext';
+import ShowImageScreen from '../screens/starter/ShowImageScreen';
+import ContactScreen from '../screens/help/ContactScreen';
+import FAQScreen from '../screens/help/FAQScreen';
+import CGUScreen from '../screens/help/CGUScreen';
 
 const StarterStack = createStackNavigator();
 export default function StarterNavigator({ navigation }) {
@@ -94,6 +98,34 @@ export default function StarterNavigator({ navigation }) {
           headerShown: false,
         }}
       />
+      <StarterStack.Screen
+        name={routes.SHOW_IMAGE}
+        component={ShowImageScreen}
+        options={() => ({
+          headerTitle: () => <HeaderButton showIcon={false} />,
+        })}
+      />
+      <StarterStack.Screen
+        name={routes.CONTACT}
+        component={ContactScreen}
+        options={{
+          headerTitle: () => <NavigationTitle title="Nous contacter" />,
+        }}
+      />
+      <StarterStack.Screen
+        name={routes.FAQ}
+        component={FAQScreen}
+        options={{
+          headerTitle: () => <NavigationTitle title="Frequent Asked Questions" />,
+        }}
+      />
+      <StarterStack.Screen
+        name={routes.CGU}
+        component={CGUScreen}
+        options={{
+          headerTitle: () => <NavigationTitle title="Conditions Générales d'Utilisation" />,
+        }}
+      />
     </StarterStack.Navigator>
   );
 }
@@ -106,5 +138,8 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
+  },
+  header: {
+    backgroundColor: colors.rougeBordeau,
   },
 });

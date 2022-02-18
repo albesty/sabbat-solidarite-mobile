@@ -20,7 +20,10 @@ export default function BackgroundScreen({ error, children }) {
         />
         <View style={styles.contentContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <AppText style={styles.textStyle}>Sabbat-Solidarité</AppText>
+            <View style={styles.sloganContainer}>
+              <AppText style={styles.textStyle}>Sabbat-Solidarité</AppText>
+              <AppText style={styles.slogan}>Ensemble, nous sommes plus forts.</AppText>
+            </View>
             {error && <AppText style={styles.error}>{error}</AppText>}
             {children}
           </ScrollView>
@@ -52,8 +55,6 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: fonts.titleFont,
     fontSize: sizes.titleSize,
-    alignSelf: 'center',
-    marginBottom: 20,
   },
   animation: {
     position: 'absolute',
@@ -63,5 +64,14 @@ const styles = StyleSheet.create({
     color: colors.rouge,
     alignSelf: 'center',
     marginBottom: 10,
+  },
+  slogan: {
+    fontSize: 12,
+    fontFamily: fonts.titleFont,
+    marginTop: -10,
+  },
+  sloganContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });

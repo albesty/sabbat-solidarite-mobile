@@ -53,15 +53,19 @@ export default function useSelectedAssociation() {
   const getMemberCotisationsInfo = (memberId) => {
     let nombreCotisations = 0;
     let totalCotisationsMontant = 0;
+    let whiteFunds = 0;
     const allCotisations = selectedAssoState.associationCotisations;
     const memberCotisations = allCotisations[memberId];
     if (memberCotisations && memberCotisations.length > 0) {
       nombreCotisations = memberCotisations.length;
       memberCotisations.forEach((cotis) => {
         totalCotisationsMontant += cotis.montant;
+        if (cotis.typeCotisation.toLowerCase() === 'mensuel') {
+          whiteFunds += cotis.montant;
+        }
       });
     }
-    return { memberCotisations, nombreCotisations, totalCotisationsMontant };
+    return { memberCotisations, nombreCotisations, totalCotisationsMontant, whiteFunds };
   };
 
   const getSelectedMembersAllCotisations = () => {
@@ -94,7 +98,7 @@ export default function useSelectedAssociation() {
     let actifMembers = [];
     let inactifMembers = [];
     const actifMembersTab = allMembers.filter(
-      (memb) => memb.member.relation.toLowerCase() !== 'ondemand'
+      (memb) => memb.member?.relation.toLowerCase() !== 'ondemand'
     );
     if (actifMembersTab) actifMembers = actifMembersTab;
     const inactifMembersTab = allMembers.filter(

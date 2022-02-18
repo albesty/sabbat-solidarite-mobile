@@ -36,4 +36,8 @@ export default Object.freeze({
   USER: 'UserCompteNavigator',
   ENGAGEMENT_VOTANTS: 'EngagementVotantScreen',
   MEMBER_COTISATION_DETAIL: 'MemberCotisationDetailScreen',
+  SHOW_IMAGE: 'ShowImageScreen',
+  CONTACT: 'ContactScreen',
+  FAQ: 'FAQScreen',
+  CGU: 'CGUScreen',
 });

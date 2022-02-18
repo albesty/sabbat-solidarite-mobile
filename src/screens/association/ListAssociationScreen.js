@@ -21,10 +21,6 @@ export default function ListAssociationScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [associations, setAssociations] = useState([]);
 
-  const handleSelectAssociation = (association) => {
-    navigation.navigate(routes.ASSOCIATION_DETAIL, association);
-  };
-
   const handleValidPress = (association) => {
     if (!association.isValid && !isAdmin()) {
       alert('Cette association est encours de validation.');
@@ -63,7 +59,6 @@ export default function ListAssociationScreen({ navigation }) {
               .find((ass) => ass.id === item.id)
               ?.member?.relation.toLowerCase()}
             association={item}
-            onPress={() => handleSelectAssociation(item)}
           />
         )}
       />
@@ -80,6 +75,6 @@ export default function ListAssociationScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   listContainer: {
-    paddingVertical: 30,
+    paddingVertical: 20,
   },
 });

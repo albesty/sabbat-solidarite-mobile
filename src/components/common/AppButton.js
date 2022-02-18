@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: '100%',
     minWidth: '50%',
+    backgroundColor: colors.rougeBordeau,
   },
   label: {
     paddingVertical: 10,

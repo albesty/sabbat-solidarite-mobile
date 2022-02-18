@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
+import React, { useContext } from 'react';
 import AppText from '../../components/common/AppText';
 import { colors } from '../../utils/styles';
 import useAssociation from '../../hooks/useAssociation';
@@ -12,7 +12,7 @@ import AppIconButton from '../../components/common/AppIconButton';
 export default function EngagementVotantScreen({ route }) {
   const selectedEngagement = route.params;
   const { selectedAssoState } = useContext(SelectedAssociationContext);
-  const { formatDate, formatFonds } = useAssociation();
+  const { formatFonds } = useAssociation();
   const { getEngagementCreator } = useEngagement();
   const creator = getEngagementCreator(selectedEngagement.Creator.id);
 

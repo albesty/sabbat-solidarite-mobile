@@ -6,11 +6,12 @@ const getSelectedAssociationEngagements = (data) => apiClient.post(`${url}/byAss
 const voteEngagement = (data) => apiClient.patch(`${url}/vote`, data);
 const getAllEngagementsVotes = (data) => apiClient.post(`${url}/allVotes`, data);
 const payTranche = (data) => apiClient.patch(`${url}/payTranche`, data);
-
+const deleteOne = (data) => apiClient.delete(`${url}/deleteOne`, data);
 export {
   addEngement,
   getSelectedAssociationEngagements,
   voteEngagement,
   getAllEngagementsVotes,
   payTranche,
+  deleteOne,
 };

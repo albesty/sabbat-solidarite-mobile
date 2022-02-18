@@ -1,13 +1,19 @@
+import { Alert } from 'react-native';
 import { useContext } from 'react/cjs/react.development';
-import { getConnectedUserAssociations } from '../api/services/memberServices';
+import { getConnectedUserAssociations, leaveAssociation } from '../api/services/memberServices';
 import { AssociationContext } from '../contexts/AssociationContext';
 import { MemberContext } from '../contexts/MemberContext';
+import { SelectedAssociationContext } from '../contexts/SelectedAssociationContext';
 import { memberActions } from '../reducers/memberReducer';
+import { selectedAssoActions } from '../reducers/selectedAssociationReducer';
 import useAuth from './useAuth';
+import useEngagement from './useEngagement';
 
 export default function useMember() {
-  const { memberState, dispatch } = useContext(MemberContext);
+  const { dispatch } = useContext(MemberContext);
   const { associationState } = useContext(AssociationContext);
+  const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
+  const { getSelectedMemberEngagements } = useEngagement();
   const { isAdmin } = useAuth();
 
   const getUserAssociations = async () => {
@@ -16,14 +22,6 @@ export default function useMember() {
     if (!response.ok) return (error = response.data?.message);
     dispatch({ type: memberActions.LOAD_USER_ASSOCIATION, list: response.data });
     return error;
-  };
-
-  getAssociationMemberState = (list, associationId) => {
-    let currentMemberState = null;
-    const selectedAssociation = list.find((item) => item.id === associationId);
-    if (selectedAssociation)
-      currentMemberState = selectedAssociation.member?.relation?.toLowerCase();
-    return currentMemberState;
   };
 
   const getCurrentUserAssociations = async () => {
@@ -42,5 +40,47 @@ export default function useMember() {
     return userAsso;
   };
 
-  return { getUserAssociations, getAssociationMemberState, getCurrentUserAssociations };
+  const sendLeavingMessage = (member) => {
+    Alert.alert('Attention!', 'Voulez-vous quitter definitivement cette association?', [
+      {
+        text: 'non',
+        onPress: () => {
+          return;
+        },
+      },
+      {
+        text: 'oui',
+        onPress: async () => {
+          const memberFunds = selectedAssoState.connectedMember.member.fonds;
+          const memberEngagements = getSelectedMemberEngagements(
+            member.member.id
+          ).memberEngagements;
+
+          const isPaying = memberEngagements.some(
+            (engage) => engage.statut.toLowerCase() === 'paying'
+          );
+          if (memberFunds !== 0) {
+            alert('Vous devez annuler vos fonds de membre avant de quitter cette association.');
+            return;
+          }
+          if (isPaying) {
+            alert('Vous devez achevez vos remboursement avant de quitter cette association.');
+            return;
+          }
+          const response = await leaveAssociation({
+            associationId: selectedAssoState.selectedAssociation.id,
+            userId: member.id,
+          });
+          if (!response.ok) {
+            alert('Nous avons rencontré un problème, veuillez reesayer plutard.');
+            return;
+          }
+          dispatchSelectedAsso({ type: selectedAssoActions.update_member, member: response.data });
+          alert('Votre demande a été envoyée avec succès.');
+        },
+      },
+    ]);
+  };
+
+  return { getUserAssociations, getCurrentUserAssociations, sendLeavingMessage };
 }

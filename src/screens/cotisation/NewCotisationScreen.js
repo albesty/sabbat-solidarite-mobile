@@ -9,9 +9,9 @@ import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
 import { addCotisation } from '../../api/services/selectedAssociationServices';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
+import RadioButtonWithLabel from '../../components/common/RadioButtonWithLabel';
 
 const validCotisation = Yup.object().shape({
-  typeCotisation: Yup.string(),
   montant: Yup.number().typeError('Montant incorrect').required('Indiquez un montant'),
   motif: Yup.string().min(5, 'Donnez un motif explicatif'),
   dateDebut: Yup.date(),
@@ -21,13 +21,16 @@ const validCotisation = Yup.object().shape({
 export default function NewCotisationScreen() {
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
   const [loading, setLoading] = useState(false);
+  const [isMensuelle, setIsMensuelle] = useState(true);
+  const [isExcept, setIsExcept] = useState(false);
+  const [cotisationType, setCotisationType] = useState('mensuel');
 
   const handleSaveCotisation = async (data) => {
     setLoading(true);
     const debut = data.dateDebut.getTime();
     const fin = data.dateFin.getTime();
     const cotisData = {
-      typeCotisation: data.typeCotisation,
+      typeCotisation: cotisationType,
       montant: data.montant,
       motif: data.motif,
       dateDebut: debut,
@@ -49,9 +52,29 @@ export default function NewCotisationScreen() {
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
+        <View>
+          <RadioButtonWithLabel
+            onSelectButton={isMensuelle}
+            onPress={() => {
+              isExcept(false);
+              setIsMensuelle(!isMensuelle);
+              setCotisationType('mensuel');
+            }}
+            label="Mensuelle"
+          />
+          <RadioButtonWithLabel
+            onSelectButton={isExcept}
+            onPress={() => {
+              setIsMensuelle(false);
+              setIsExcept(!isExcept);
+              setCotisationType('exceptionnel');
+            }}
+            label="Exceptionnel"
+          />
+        </View>
+        <AppSpacer />
         <AppForm
           initialValues={{
-            typeCotisation: '',
             montant: '',
             motif: '',
             dateDebut: new Date(),
@@ -60,8 +83,6 @@ export default function NewCotisationScreen() {
           validationSchema={validCotisation}
           onSubmit={handleSaveCotisation}
         >
-          <AppFormField name="typeCotisation" label="Type cotisation" />
-          <AppSpacer />
           <AppFormField keyboardType="numeric" label="Montant" name="montant" />
           <AppSpacer />
           <AppFormField label="Motif" name="motif" />

@@ -6,4 +6,6 @@ const createAssociation = (association) => apiClient.post(url, association);
 
 const getAll = () => apiClient.get(url);
 
-export { createAssociation, getAll };
+const updateAvatar = (data) => apiClient.patch(`${url}updateAvatar`, data);
+
+export { createAssociation, getAll, updateAvatar };

@@ -3,34 +3,30 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { TransactionContext } from '../../contexts/TransactionContext';
 import AppText from '../../components/common/AppText';
-import { getAllTransactions } from '../../api/services/transactionServices';
-import { transactionActions } from '../../reducers/transactionReducer';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
-import { AuthContext } from '../../contexts/AuthContext';
 import AppSurface from '../../components/common/AppSurface';
 import useAssociation from '../../hooks/useAssociation';
 import { colors } from '../../utils/styles';
 import AppButton from '../../components/common/AppButton';
 import AppSeparator from '../../components/common/AppSeparator';
+import AppMessage from '../../components/common/AppMessage';
+import useAuth from '../../hooks/useAuth';
 
 export default function TransactionScreen() {
   const { formatFonds, formatDate, dataSorter } = useAssociation();
-  const { state } = useContext(AuthContext);
-  const { transactionState, dispatchTransaction } = useContext(TransactionContext);
+  const { getTransactions } = useAuth();
+  const { transactionState } = useContext(TransactionContext);
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [stateLabel, setStateLabel] = useState('all');
 
-  const getTransactions = useCallback(async () => {
+  const getUserTransactions = useCallback(async () => {
     setLoading(true);
-    const response = await getAllTransactions({ userId: state.user.id });
-    if (!response.ok) {
-      alert('Nous avons rencontré une erreur lors du rechargement de vos transactions.');
+    const { errorState, data } = await getTransactions();
+    if (errorState) {
       setLoading(false);
       return;
     }
-    dispatchTransaction({ type: transactionActions.all_user_transaction, list: response.data });
-    const data = response.data;
     setTransactions(dataSorter(data));
     setLoading(false);
   }, []);
@@ -64,7 +60,7 @@ export default function TransactionScreen() {
     }
   };
   useEffect(() => {
-    getTransactions();
+    getUserTransactions();
   }, []);
 
   return (
@@ -93,37 +89,40 @@ export default function TransactionScreen() {
         />
       </View>
       <AppSeparator />
-      <FlatList
-        data={transactions}
-        keyExtractor={(transac) => transac.number.toString()}
-        renderItem={({ item }) => (
-          <AppSurface style={styles.transacItem}>
-            <View style={styles.reseau}>
-              <View style={styles.statut}>
-                <MaterialCommunityIcons
-                  size={30}
-                  name="check-circle"
-                  color={item.statut === 'succeeded' ? colors.vert : colors.rougeBordeau}
-                />
-                <AppText>réussi</AppText>
-              </View>
-              {item.reseau && (
-                <View style={styles.flagContainer}>
-                  <Image style={styles.flag} source={getReseauFlag(item.reseau)} />
-                  <AppText>{item.numero}</AppText>
+      {transactions.length > 0 && (
+        <FlatList
+          data={transactions}
+          keyExtractor={(transac) => transac.number.toString()}
+          renderItem={({ item }) => (
+            <AppSurface style={styles.transacItem}>
+              <View style={styles.reseau}>
+                <View style={styles.statut}>
+                  <MaterialCommunityIcons
+                    size={30}
+                    name="check-circle"
+                    color={item.statut === 'succeeded' ? colors.vert : colors.rougeBordeau}
+                  />
+                  <AppText>réussi</AppText>
                 </View>
-              )}
-            </View>
-            <View style={styles.fonds}>
-              <AppText style={styles.fondsText}>{item.typeTransac}</AppText>
-              <AppText style={styles.fondsText}>{formatFonds(item.montant)}</AppText>
-            </View>
-            <View>
-              <AppText>{formatDate(item.createdAt)}</AppText>
-            </View>
-          </AppSurface>
-        )}
-      />
+                {item.reseau && (
+                  <View style={styles.flagContainer}>
+                    <Image style={styles.flag} source={getReseauFlag(item.reseau)} />
+                    <AppText>{item.numero}</AppText>
+                  </View>
+                )}
+              </View>
+              <View style={styles.fonds}>
+                <AppText style={styles.fondsText}>{item.typeTransac}</AppText>
+                <AppText style={styles.fondsText}>{formatFonds(item.montant)}</AppText>
+              </View>
+              <View>
+                <AppText>{formatDate(item.createdAt)}</AppText>
+              </View>
+            </AppSurface>
+          )}
+        />
+      )}
+      {transactions.length === 0 && <AppMessage message="Aucune transaction trouvée." />}
       {loading && <AppActivityIndicator />}
     </>
   );
@@ -166,6 +165,7 @@ const styles = StyleSheet.create({
   links: {
     width: '30%',
     minWidth: '30%',
+    backgroundColor: colors.white,
   },
   flag: {
     height: 40,

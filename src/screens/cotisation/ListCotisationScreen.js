@@ -22,6 +22,7 @@ export default function ListCotisationScreen({ navigation }) {
   const handlePayCotisation = (cotisation) => {
     navigation.navigate(routes.PAY_COTISATION, cotisation);
   };
+
   return (
     <>
       <FlatList

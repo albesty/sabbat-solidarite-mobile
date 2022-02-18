@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
-import React, { useContext, useState } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -12,29 +12,38 @@ import AppText from '../../components/common/AppText';
 import RadioButtonWithLabel from '../../components/common/RadioButtonWithLabel';
 import { actions } from '../../reducers/authReducer';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
+import useAssociation from '../../hooks/useAssociation';
+import useAuth from '../../hooks/useAuth';
+import AppInput from '../../components/common/AppInput';
+import { List } from 'react-native-paper';
+
 const validTransaction = Yup.object().shape({
-  numero: Yup.string()
-    .typeError('Numero incorrect')
-    .min(10, 'Numero incorrect')
-    .max(10, 'Numero incorrect')
-    .required('Veuillez indiquer votre numero de transaction.'),
   montant: Yup.number()
     .typeError('Montant invalide')
-    .min(100, 'Le montant doit etre de 100 xof minimum.'),
+    .min(100, 'Le montant doit etre de 100 xof minimum.')
+    .required('Veuillez indiquer le montant.'),
 });
 export default function NewTransactionScreen({ route, navigation }) {
   const currentTransaction = route.params;
   const { state, dispatch } = useContext(AuthContext);
-  const { dispatchTransaction } = useContext(TransactionContext);
+  const { dataSorter } = useAssociation();
+  const { transactionState, dispatchTransaction } = useContext(TransactionContext);
+  const { getTransactions } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [mobileTransaction, setMobileTransaction] = useState(false);
   const [onCreditCardSelect, setOnCreditCardSelect] = useState(false);
   const [inputInfo, setInputInfo] = useState(null);
   const [reseau, setReseau] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [favoriteNumbers, setFavoriteNumbers] = useState([]);
+  let [numero, setNumero] = useState('');
 
   const handleAddTransaction = async (transaction, { resetForm }) => {
     if (!reseau || reseau.length === 0) {
-      alert('Vous devez choisir un numemro orange ou mtn ou moov.');
+      alert('Vous devez choisir un numero mobile money orange-ci ou mtn-ci ou moov-ci.');
+      return;
+    }
+    if (numero.length !== 10) {
+      alert('Le numero saisi est incorrect.');
       return;
     }
     setLoading(true);
@@ -43,7 +52,7 @@ export default function NewTransactionScreen({ route, navigation }) {
       creatorId: state.user.id,
       type,
       libelle: type === 'rechargement' ? 'Rechargement de portefeuille' : 'Retrait de fonds',
-      numero: transaction.numero,
+      numero: numero,
       montant: Number(transaction.montant),
       reseau: reseau,
     };
@@ -59,6 +68,7 @@ export default function NewTransactionScreen({ route, navigation }) {
     dispatchTransaction({ type: transactionActions.add_transaction, transaction: response.data });
     alert('Votre transaction a été effectuée avec succès.');
     resetForm();
+    setNumero('');
     setMobileTransaction(false);
     setOnCreditCardSelect(false);
     navigation.navigate(routes.USER_COMPTE);
@@ -81,9 +91,47 @@ export default function NewTransactionScreen({ route, navigation }) {
   };
 
   const handleShowMobileInput = () => {
+    setOnCreditCardSelect(false);
     setMobileTransaction(!mobileTransaction);
     setInputInfo(null);
   };
+
+  const getUpdatedTransactions = useCallback(async () => {
+    let numbers = [];
+    if (transactionState.transactionList.length > 0) {
+      numbers = dataSorter(transactionState.transactionList).map((item) => item.numero);
+    } else {
+      const { errorState, data } = await getTransactions();
+      if (!errorState) {
+        numbers = dataSorter(data).map((item) => item.numero);
+      }
+    }
+    if (numbers.length > 0) {
+      const numberCount = Array.from(new Set(numbers)).map(
+        (val) => numbers.filter((v) => v === val).length
+      );
+      const numberSet = Array.from(new Set(numbers));
+      const numbersData = [];
+
+      for (let i = 0; i < numberSet.length; i++) {
+        numbersData.push({
+          number: numberSet[i],
+          count: numberCount[i],
+        });
+      }
+      const sortedNumbers = numbersData.sort((a, b) => {
+        if (a.count > b.count) return -1;
+        if (a.count < b.count) return 1;
+        return 0;
+      });
+      setFavoriteNumbers(sortedNumbers);
+    }
+  }, []);
+
+  useEffect(() => {
+    getUpdatedTransactions();
+  }, []);
+
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
@@ -100,21 +148,23 @@ export default function NewTransactionScreen({ route, navigation }) {
           <View style={styles.formContainer}>
             <AppForm
               initialValues={{
-                numero: '',
                 montant: '',
               }}
               validationSchema={validTransaction}
               onSubmit={handleAddTransaction}
             >
-              <View style={styles.numeroContainer}>
-                <AppFormField
-                  keyboardType="numeric"
-                  getInputValue={(num) => handleCheckNumero(num)}
-                  style={styles.formFiel}
-                  name="numero"
-                  label="numero"
-                />
-              </View>
+              <AppInput
+                keyboardType="numeric"
+                style={styles.formFiel}
+                value={numero}
+                onChangeText={(val) => {
+                  setNumero(val);
+                  handleCheckNumero(val);
+                }}
+                label="numero"
+                placeholder="Ex: 0708525827"
+                maxLength={14}
+              />
               {inputInfo && <Image style={styles.inputNumero} source={inputInfo} />}
               <AppSpacer />
               <AppFormField
@@ -133,7 +183,10 @@ export default function NewTransactionScreen({ route, navigation }) {
         <AppSpacer />
         <RadioButtonWithLabel
           label="Carte de crédit"
-          onPress={() => setOnCreditCardSelect(!onCreditCardSelect)}
+          onPress={() => {
+            setMobileTransaction(false);
+            setOnCreditCardSelect(!onCreditCardSelect);
+          }}
           onSelectButton={onCreditCardSelect}
         >
           {onCreditCardSelect && (
@@ -142,7 +195,27 @@ export default function NewTransactionScreen({ route, navigation }) {
             </View>
           )}
         </RadioButtonWithLabel>
+        {favoriteNumbers.length > 0 && (
+          <ScrollView>
+            <List.Accordion
+              left={(props) => <List.Icon {...props} icon="card-account-phone" />}
+              title="Numeros favoris"
+            >
+              {favoriteNumbers.map((item, index) => (
+                <List.Item
+                  key={item.number + index}
+                  title={item.number}
+                  onPress={() => {
+                    setNumero(item.number);
+                    handleCheckNumero(item.number);
+                  }}
+                />
+              ))}
+            </List.Accordion>
+          </ScrollView>
+        )}
       </ScrollView>
+
       {loading && <AppActivityIndicator />}
     </>
   );
@@ -150,7 +223,7 @@ export default function NewTransactionScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
+    paddingVertical: 40,
     marginHorizontal: 30,
   },
   moneyFlag: {
@@ -162,7 +235,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-
+  favHeader: {
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  favItem: {
+    marginVertical: 5,
+  },
+  favoriteContainer: {
+    paddingBottom: 20,
+    marginHorizontal: 10,
+    alignItems: 'center',
+  },
   formContainer: {
     marginVertical: 20,
   },

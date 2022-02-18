@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useContext } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import AppText from '../../components/common/AppText';
 import AddNewButton from '../../components/common/AddNewButton';
@@ -11,7 +11,6 @@ import { colors } from '../../utils/styles';
 import AppSurface from '../../components/common/AppSurface';
 import useAssociation from '../../hooks/useAssociation';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
-import AppWaitInfo from '../../components/common/AppWaitInfo';
 
 export default function MemberEngagementScreen({ navigation, route }) {
   const selectedMember = route.params;
