@@ -148,7 +148,7 @@ export default function CompteScreen({ route, navigation }) {
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.contentStyle}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentStyle}>
         <View style={styles.avatarContainer}>
           <View style={styles.avatarLoadingContainer}>
             <UserAvatar

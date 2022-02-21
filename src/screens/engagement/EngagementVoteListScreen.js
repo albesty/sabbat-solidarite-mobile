@@ -12,6 +12,7 @@ export default function EngagementVoteListScreen() {
   return (
     <>
       <FlatList
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
         data={dataSorter(getSelectedAssoEngagementInfos().notValidEngagements)}
         keyExtractor={(item) => item.id.toString() + 'voting'}

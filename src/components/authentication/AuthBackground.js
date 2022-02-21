@@ -22,7 +22,7 @@ export default function BackgroundScreen({ error, children }) {
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.sloganContainer}>
               <AppText style={styles.textStyle}>Sabbat-Solidarité</AppText>
-              <AppText style={styles.slogan}>Ensemble, nous sommes plus forts.</AppText>
+              <AppText style={styles.slogan}>Unis, nous sommes plus forts.</AppText>
             </View>
             {error && <AppText style={styles.error}>{error}</AppText>}
             {children}

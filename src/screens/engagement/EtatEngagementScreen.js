@@ -39,6 +39,7 @@ export default function EtatEngagementScreen({ navigation }) {
   return (
     <>
       <FlatList
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
         data={getSelectedAssoCurrentMembers().actifMembers}
         keyExtractor={(item) => item.id.toString() + 'engagement'}

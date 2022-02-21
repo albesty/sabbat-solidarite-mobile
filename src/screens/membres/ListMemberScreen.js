@@ -4,6 +4,7 @@ import MemberItem from '../../components/member/MemberItem';
 import { colors } from '../../utils/styles';
 import useSelectedAssociation from '../../hooks/useSelectedAssociation';
 import routes from '../../navigation/routes';
+import useAuth from '../../hooks/useAuth';
 
 export default function ListMemberScreen({ navigation }) {
   const { getSelectedAssoCurrentMembers } = useSelectedAssociation();
@@ -11,6 +12,7 @@ export default function ListMemberScreen({ navigation }) {
   return (
     <>
       <FlatList
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
         data={getSelectedAssoCurrentMembers().actifMembers}
         keyExtractor={(item) => item.id + 'member'}

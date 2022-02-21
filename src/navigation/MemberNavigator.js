@@ -7,6 +7,7 @@ import MemberCompteScreen from '../screens/membres/MemberCompteScreen';
 import { colors } from '../utils/styles';
 import HeaderButton from '../components/navigation/HeaderButton';
 import NavigationTitle from '../components/navigation/NavigationTitle';
+import EditMemberScreen from '../screens/membres/EditMemberScreen';
 
 const MembreStack = createStackNavigator();
 
@@ -45,6 +46,13 @@ export default function MemberNavigator() {
         component={MemberCompteScreen}
         options={{
           headerTitle: () => <NavigationTitle title="Compte membre" />,
+        }}
+      />
+      <MembreStack.Screen
+        name={routes.MEMBER_EDIT_INFO}
+        component={EditMemberScreen}
+        options={{
+          headerTitle: () => <NavigationTitle title="Editeur info membre" />,
         }}
       />
     </MembreStack.Navigator>

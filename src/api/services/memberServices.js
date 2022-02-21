@@ -11,6 +11,7 @@ const getConnectedUserAssociations = () => apiClient.get(`${url}/associations`);
 const payCotisation = (data) => apiClient.patch(`${url}/payCotisations`, data);
 
 const leaveAssociation = (data) => apiClient.patch(`${url}/leaveAssociation`, data);
+const updateInfo = (data) => apiClient.patch(`${url}/updateOne`, data);
 
 export {
   sendAdhesionMessage,
@@ -18,4 +19,5 @@ export {
   payCotisation,
   responseToAdhesionMessage,
   leaveAssociation,
+  updateInfo,
 };

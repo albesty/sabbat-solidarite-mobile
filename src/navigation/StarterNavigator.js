@@ -18,7 +18,6 @@ import { AuthContext } from '../contexts/AuthContext';
 import ShowImageScreen from '../screens/starter/ShowImageScreen';
 import ContactScreen from '../screens/help/ContactScreen';
 import FAQScreen from '../screens/help/FAQScreen';
-import CGUScreen from '../screens/help/CGUScreen';
 
 const StarterStack = createStackNavigator();
 export default function StarterNavigator({ navigation }) {
@@ -117,13 +116,6 @@ export default function StarterNavigator({ navigation }) {
         component={FAQScreen}
         options={{
           headerTitle: () => <NavigationTitle title="Frequent Asked Questions" />,
-        }}
-      />
-      <StarterStack.Screen
-        name={routes.CGU}
-        component={CGUScreen}
-        options={{
-          headerTitle: () => <NavigationTitle title="Conditions Générales d'Utilisation" />,
         }}
       />
     </StarterStack.Navigator>

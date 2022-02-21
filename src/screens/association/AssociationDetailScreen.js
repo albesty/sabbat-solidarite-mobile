@@ -12,21 +12,19 @@ import { colors } from '../../utils/styles';
 import AppLabelAndValueSimple from '../../components/common/AppLabelAndValueSimple';
 import AppLabelValue from '../../components/common/AppLabelValue';
 import AppSpacer from '../../components/common/AppSpacer';
-import AppIconButton from '../../components/common/AppIconButton';
-import AppImagePicker from '../../components/common/AppImagePicker';
+import AppPickAndUploadDocument from '../../components/common/AppPickAndUploadDocument';
+import useUploadImage from '../../hooks/useUploadImage';
 
 export default function AssociationDetailScreen({ route, navigation }) {
   const { formatFonds, showLargeImage } = useAssociation();
   const { isAdmin } = useAuth();
+  const { getFilePrint } = useUploadImage();
   const selectedAssociation = route.params;
   const { memberState } = useContext(MemberContext);
   const [expandCotisation, setExpandCotisation] = useState(false);
   const [expandGestion, setExpandGestion] = useState(false);
   const [expandContact, setExpandContact] = useState(false);
   const [expandReglement, setExpandReglement] = useState(false);
-  const [showImageModal, setShowImageModal] = useState(false);
-
-  const handleEditReglement = (image) => {};
 
   return (
     <>
@@ -88,22 +86,23 @@ export default function AssociationDetailScreen({ route, navigation }) {
         >
           <AppLabelAndValueSimple label="Administrateur" value={selectedAssociation.telAdmin} />
         </List.Accordion>
-        {!selectedAssociation.reglementInterieur && (
-          <List.Accordion
-            expanded={expandReglement}
-            onPress={() => setExpandReglement(!expandReglement)}
-            title="Reglementation"
-          >
-            <AppLabelAndValueSimple label="Reglement interieur " value="Encours de redaction" />
-            {isAdmin() && (
-              <AppIconButton
-                onPress={() => setShowImageModal(true)}
-                style={styles.editReglement}
-                icon="file-document-edit"
-              />
-            )}
-          </List.Accordion>
-        )}
+
+        <List.Accordion
+          expanded={expandReglement}
+          onPress={() => setExpandReglement(!expandReglement)}
+          title="Reglementation"
+        >
+          <AppButton
+            icon="file-pdf"
+            labelStyle={styles.reglementLabel}
+            style={styles.buttons}
+            onPress={() => getFilePrint(selectedAssociation.reglementInterieur)}
+            title="Consulter le reglement."
+            mode="text"
+          />
+          {isAdmin() && <AppPickAndUploadDocument association={selectedAssociation} />}
+        </List.Accordion>
+
         {isAdmin() && (
           <AppButton
             style={styles.button}
@@ -113,11 +112,6 @@ export default function AssociationDetailScreen({ route, navigation }) {
           />
         )}
       </ScrollView>
-      <AppImagePicker
-        onSelectImage={handleEditReglement}
-        imageModalVisible={showImageModal}
-        onCloseImageModal={() => setShowImageModal(false)}
-      />
     </>
   );
 }
@@ -146,5 +140,15 @@ const styles = StyleSheet.create({
   editReglement: {
     backgroundColor: colors.bleuFbi,
     alignSelf: 'flex-end',
+  },
+  buttons: {
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: colors.white,
+    marginTop: 10,
+  },
+  reglementLabel: {
+    color: colors.black,
+    paddingVertical: 5,
   },
 });

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Alert, View } from 'react-native';
 import React, { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
@@ -9,6 +9,7 @@ import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { payCotisation } from '../../api/services/memberServices';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 import { BottomNavigation } from 'react-native-paper';
+import routes from '../../navigation/routes';
 
 const validPayCotis = Yup.object().shape({
   montant: Yup.number().typeError('Montant incorrect.').required('Montant requis'),
@@ -21,7 +22,17 @@ export default function PayCotisationScreen({ route, navigation }) {
   const handlePayCotisation = async (data) => {
     const connectedMember = selectedAssoState.connectedMember;
     if (connectedMember.wallet < Number(data.montant) + 100) {
-      alert("Vous n'avez pas suffisamment de fonds pour payer cette cotisation.");
+      Alert.alert(
+        'Information',
+        "Vous n'avez pas suffisamment de fonds pour payer cette cotisation.",
+        [
+          {
+            text: 'recharger',
+            onPress: () => navigation.navigate(routes.STARTER),
+          },
+          { text: 'annuler', onPress: () => null },
+        ]
+      );
       return;
     }
     setLoading(true);
@@ -42,6 +53,7 @@ export default function PayCotisationScreen({ route, navigation }) {
     });
     setLoading(false);
     alert('Votre cotisation a été payée avec succès.');
+    dispatchSelectedAsso({ type: selectedAssoActions.must_update, updated: true });
     navigation.goBack();
   };
   return (

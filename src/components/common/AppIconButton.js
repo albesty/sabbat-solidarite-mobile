@@ -9,13 +9,14 @@ export default function AppIconButton({
   color = colors.white,
   size = 30,
   info,
+  infoStyle,
   showInfo = true,
   ...other
 }) {
   return (
     <>
       <IconButton icon={icon} color={color} size={size} {...other} />
-      {showInfo && info > 0 && <AppText style={styles.info}>{info}</AppText>}
+      {showInfo && info > 0 && <AppText style={[styles.info, infoStyle]}>{info}</AppText>}
     </>
   );
 }

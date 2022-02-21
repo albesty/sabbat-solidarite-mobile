@@ -1,6 +1,7 @@
 import { create } from 'apisauce';
 import { Buffer } from 'buffer';
 import { signUploadRequest } from '../api/services/fileUploaderService';
+import * as Linking from 'expo-linking';
 
 export default function useUploadImage() {
   const getFileNameAndType = (imageUrl) => {
@@ -75,5 +76,21 @@ export default function useUploadImage() {
     return { signedUrlsArray: signedReqArray };
   };
 
-  return { dataTransformer, directUpload, uploader };
+  const getFilePrint = (url) => {
+    if (!url) {
+      alert('Aucun fichier trouvé.');
+      return;
+    }
+    return Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          console.log("Can't handle url: " + url);
+          alert("Impossible d'ouvrir le fichier sur votre appareil.");
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
+  return { dataTransformer, directUpload, uploader, getFilePrint };
 }

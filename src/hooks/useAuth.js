@@ -68,5 +68,30 @@ export default function useAuth() {
 
   const getLogout = () => removeItem();
 
-  return { transformUserData, getUserLoggedIn, isAdmin, getTransactions, isModerator, getLogout };
+  const getMemberStatut = (statut) => {
+    let memberStatut = 'ORDINAIRE';
+    const currentStatut = statut.toLowerCase();
+    if (currentStatut === 'moderator') memberStatut = 'MODERATEUR';
+    if (currentStatut === 'admin') memberStatut = 'ADMINISTRATEUR';
+    if (currentStatut === 'new') memberStatut = 'NOUVEAU';
+    if (
+      currentStatut !== 'moderator' &&
+      currentStatut !== 'admin' &&
+      currentStatut !== 'ordinaire' &&
+      currentStatut !== 'new'
+    )
+      memberStatut = currentStatut.toUpperCase();
+
+    return memberStatut;
+  };
+
+  return {
+    transformUserData,
+    getUserLoggedIn,
+    isAdmin,
+    getTransactions,
+    isModerator,
+    getLogout,
+    getMemberStatut,
+  };
 }

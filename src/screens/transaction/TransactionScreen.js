@@ -91,6 +91,7 @@ export default function TransactionScreen() {
       <AppSeparator />
       {transactions.length > 0 && (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={transactions}
           keyExtractor={(transac) => transac.number.toString()}
           renderItem={({ item }) => (
@@ -122,8 +123,10 @@ export default function TransactionScreen() {
           )}
         />
       )}
-      {transactions.length === 0 && <AppMessage message="Aucune transaction trouvée." />}
       {loading && <AppActivityIndicator />}
+      {!loading && transactions.length === 0 && (
+        <AppMessage message="Aucune transaction trouvée." />
+      )}
     </>
   );
 }

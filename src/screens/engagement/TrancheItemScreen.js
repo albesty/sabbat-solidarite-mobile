@@ -79,6 +79,7 @@ export default function TrancheItemScreen({ route, navigation }) {
     setLoading(false);
     resetForm();
     setPaying(false);
+    dispatchSelectedAsso({ type: selectedAssoActions.must_update, updated: true });
   };
 
   useEffect(() => {

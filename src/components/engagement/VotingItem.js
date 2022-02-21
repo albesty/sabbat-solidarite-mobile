@@ -37,6 +37,7 @@ export default function VotingItem({ engagement, goToVotants }) {
     });
     setLoading(false);
     alert('Vous avez voté avec succès.');
+    dispatchSelectedAsso({ type: selectedAssoActions.must_update, updated: true });
   };
 
   return (
@@ -62,16 +63,19 @@ export default function VotingItem({ engagement, goToVotants }) {
               style={styles.voteUp}
               icon="thumb-up"
             />
-            <AppIconButton
-              info={
-                getEngagementVotingCount(engagement.id).downVotes > 0
-                  ? getEngagementVotingCount(engagement.id).downVotes
-                  : null
-              }
-              onPress={() => handleVote({ type: 'down' })}
-              style={styles.voteDown}
-              icon="thumb-down"
-            />
+            <View>
+              <AppIconButton
+                info={
+                  getEngagementVotingCount(engagement.id).downVotes > 0
+                    ? getEngagementVotingCount(engagement.id).downVotes
+                    : null
+                }
+                infoStyle={styles.info}
+                onPress={() => handleVote({ type: 'down' })}
+                style={styles.voteDown}
+                icon="thumb-down"
+              />
+            </View>
           </View>
         </View>
       </AppSurface>
@@ -81,6 +85,11 @@ export default function VotingItem({ engagement, goToVotants }) {
 }
 
 const styles = StyleSheet.create({
+  info: {
+    position: 'absolute',
+    bottom: 5,
+    left: -2,
+  },
   surfaceStyle: {
     alignItems: 'stretch',
     paddingHorizontal: 20,

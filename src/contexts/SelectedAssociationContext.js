@@ -12,6 +12,7 @@ const initialState = {
   associationCotisations: {},
   associationEngagements: [],
   engagementsVotes: {},
+  update: false,
 };
 export default function SelectedAssociationProvider({ children }) {
   const [selectedAssoState, dispatchSelectedAsso] = useReducer(selectedAssoReducer, initialState);

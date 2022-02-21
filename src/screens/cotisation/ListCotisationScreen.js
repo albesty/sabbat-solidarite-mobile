@@ -26,6 +26,7 @@ export default function ListCotisationScreen({ navigation }) {
   return (
     <>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={dataSorter(selectedAssoState.allCotisations)}
         keyExtractor={(item) => item.id + 'list_cotisations'}
         renderItem={({ item }) => (

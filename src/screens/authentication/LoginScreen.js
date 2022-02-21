@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { TextInput } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 import AuthBackground from '../../components/authentication/AuthBackground';
 import AppSpacer from '../../components/common/AppSpacer';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import useAuth from '../../hooks/useAuth';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
+import AppText from '../../components/common/AppText';
+import routes from '../../navigation/routes';
+import { colors } from '../../utils/styles';
 
 const validUser = Yup.object().shape({
   email: Yup.string()
@@ -72,8 +76,28 @@ export default function LoginScreen({ navigation }) {
           <AppSpacer />
           <AppSubmitButton title="Valider" />
         </AppForm>
+        <View style={styles.missingContainer}>
+          <AppText>Oublié? </AppText>
+          <AppText
+            style={styles.contactText}
+            onPress={() => navigation.navigate('Starter', { screen: routes.CONTACT })}
+          >
+            Contactez nous.
+          </AppText>
+        </View>
       </AuthBackground>
       {loading && <AppActivityIndicator />}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  contactText: {
+    color: colors.bleuFbi,
+  },
+  missingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+});

@@ -120,7 +120,7 @@ export default function AssociationCard({
       return;
     }
     associationDispatch({
-      type: associationsActions.update_avatar,
+      type: associationsActions.update_info,
       association: updateResponse.data,
     });
     alert('Les images ont été mises à jour avec succès.');
@@ -129,7 +129,12 @@ export default function AssociationCard({
 
   return (
     <>
-      <Card elevation={5} mode="elevated" style={[styles.card, cardStyle]}>
+      <Card
+        onPress={association.isValid ? null : handleValidPress}
+        elevation={5}
+        mode="elevated"
+        style={[styles.card, cardStyle]}
+      >
         <TouchableWithoutFeedback onPress={handleValidPress}>
           <View>
             <Card.Cover
@@ -155,7 +160,7 @@ export default function AssociationCard({
           />
         )}
         {uploading && <UploaderModal style={styles.avatarLoading} progress={progress} />}
-        <Card.Content>
+        <Card.Content style={{ paddingBottom: showActions ? 0 : 10 }}>
           <Card.Title
             title={association.nom}
             subtitle={association.description}
@@ -215,8 +220,13 @@ export default function AssociationCard({
             )}
           </Card.Actions>
         )}
+        {!association.isValid && (
+          <View style={styles.validating}>
+            <AppText>Encours de validation...</AppText>
+          </View>
+        )}
       </Card>
-      {!association.isValid && <AppWaitInfo info="Encours de vaidation..." />}
+
       <AppImagePicker
         onSelectImage={handleChangeBackImage}
         imageModalVisible={showImageModal}
@@ -271,7 +281,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.leger,
     opacity: 0.8,
     position: 'absolute',
     alignSelf: 'center',
@@ -294,5 +304,15 @@ const styles = StyleSheet.create({
   stopButton: {
     width: 'auto',
     backgroundColor: colors.white,
+  },
+  validating: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    zIndex: 999,
+    backgroundColor: colors.white,
+    opacity: 0.5,
   },
 });

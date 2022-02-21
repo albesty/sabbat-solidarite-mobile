@@ -1,5 +1,6 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppText from '../common/AppText';
 import useAssociation from '../../hooks/useAssociation';
 import { colors } from '../../utils/styles';
@@ -10,7 +11,6 @@ import AppIconButton from '../common/AppIconButton';
 import useAuth from '../../hooks/useAuth';
 import routes from '../../navigation/routes';
 import { useNavigation } from '@react-navigation/native';
-import UserAvatar from '../user/UserAvatar';
 import useEngagement from '../../hooks/useEngagement';
 import SmallMemberItem from '../member/SmallMemberItem';
 import { deleteOne } from '../../api/services/engagementServices';
@@ -23,11 +23,13 @@ export default function EngagementItem({ engagement }) {
   const { dispatchSelectedAsso } = useContext(SelectedAssociationContext);
   const { formatFonds, formatDate } = useAssociation();
   const { isAdmin, isModerator } = useAuth();
-  const { getEngagementCreator } = useEngagement();
+  const { getEngagementCreator, getConnectedMemberVoteState } = useEngagement();
   const [loading, setLoading] = useState(false);
 
   const isAuthorize = isAdmin() || isModerator();
   const creator = getEngagementCreator(engagement.Creator.id);
+
+  const connectedMemberVote = getConnectedMemberVoteState(engagement.id);
 
   const handleSelectTranche = (tranche) => {
     if (engagement.accord !== true) return;
@@ -65,13 +67,37 @@ export default function EngagementItem({ engagement }) {
     <>
       <View style={styles.container}>
         <View style={styles.statutContainer}>
-          <AppText style={styles.statut}>{engagement.statut}</AppText>
-          <AppText>{engagement.typeEngagement}</AppText>
+          <View style={styles.votedState}>
+            {connectedMemberVote.length > 0 && (
+              <AppText style={styles.voteStateText}>Vous avez voté</AppText>
+            )}
+            {connectedMemberVote.length === 0 && (
+              <AppText style={styles.voteStateText}>Vous n'avez pas voté</AppText>
+            )}
+            {connectedMemberVote === 'up' && (
+              <MaterialCommunityIcons color={colors.vert} size={15} name="thumb-up" />
+            )}
+            {connectedMemberVote === 'down' && (
+              <MaterialCommunityIcons color={colors.rougeBordeau} size={15} name="thumb-down" />
+            )}
+          </View>
+          <View>
+            <AppText style={styles.statut}>
+              {engagement.statut === 'ended'
+                ? 'Fin remboursement'
+                : engagement.statut === 'rejected'
+                ? 'Refusé'
+                : engagement.statut === 'paying'
+                ? 'Remboursement'
+                : engagement.statut}
+            </AppText>
+            <AppText style={styles.typeEngagement}>{engagement.typeEngagement}</AppText>
+          </View>
         </View>
         <AppText numberOfLines={2} style={styles.libelle}>
           {engagement.libelle}
         </AppText>
-        <AppText>{formatFonds(engagement.montant)}</AppText>
+        <AppText style={styles.montant}>{formatFonds(engagement.montant)}</AppText>
 
         <List.Accordion title="Tranches de payement">
           {engagement.tranches.map((tranche, index) => (
@@ -125,9 +151,15 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
   },
+  libelle: {
+    marginVertical: 5,
+  },
   creatorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  montant: {
+    fontWeight: 'bold',
   },
 
   rejected: {
@@ -144,9 +176,12 @@ const styles = StyleSheet.create({
   },
   statut: {
     color: colors.or,
+    fontSize: 15,
   },
   statutContainer: {
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   trancheContainer: {
     flexDirection: 'row',
@@ -154,5 +189,18 @@ const styles = StyleSheet.create({
   },
   trancheText: {
     fontSize: 15,
+  },
+  typeEngagement: {
+    fontSize: 15,
+    color: colors.grey,
+  },
+  votedState: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  voteStateText: {
+    fontSize: 10,
+    color: colors.grey,
+    marginRight: 10,
   },
 });

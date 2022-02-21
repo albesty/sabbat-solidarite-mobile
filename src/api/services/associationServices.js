@@ -8,4 +8,6 @@ const getAll = () => apiClient.get(url);
 
 const updateAvatar = (data) => apiClient.patch(`${url}updateAvatar`, data);
 
-export { createAssociation, getAll, updateAvatar };
+const updateReglement = (data) => apiClient.post(`${url}updateReglement`, data);
+
+export { createAssociation, getAll, updateAvatar, updateReglement };

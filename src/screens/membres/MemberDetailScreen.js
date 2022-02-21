@@ -19,12 +19,13 @@ import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 import routes from '../../navigation/routes';
 import useMember from '../../hooks/useMember';
+import AppIconButton from '../../components/common/AppIconButton';
 
 export default function MemberDetailScreen({ route, navigation }) {
   const selectedMember = route.params;
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
   const { formatFonds } = useAssociation();
-  const { isAdmin, isModerator } = useAuth();
+  const { isAdmin, isModerator, getMemberStatut } = useAuth();
   const { getMemberCotisationsInfo } = useSelectedAssociation();
   const { getSelectedMemberEngagements } = useEngagement();
   const { sendLeavingMessage } = useMember();
@@ -38,6 +39,15 @@ export default function MemberDetailScreen({ route, navigation }) {
 
   const authorizeQuit =
     selectedMember.member.relation.toLowerCase() === 'onleave' && isAdministrateur;
+
+  const isPersoInfo =
+    selectedMember.username ||
+    selectedMember.nom ||
+    selectedMember.prenom ||
+    selectedMember.adresse ||
+    selectedMember.phone ||
+    selectedMember.profession ||
+    selectedMember.emploi;
 
   const adhesionResponse = async (resp) => {
     setLoading(true);
@@ -81,6 +91,13 @@ export default function MemberDetailScreen({ route, navigation }) {
             {selectedMember.username ? selectedMember.username : selectedMember.email}
           </AppText>
         </View>
+        {isAdministrateur && (
+          <AppIconButton
+            onPress={() => navigation.navigate(routes.MEMBER_EDIT_INFO, selectedMember)}
+            style={styles.editInfo}
+            icon="account-edit"
+          />
+        )}
         <AppSpacer />
         <AppSpacer />
         <AppSurface surfaceStyle={styles.surface} info="Fonds">
@@ -91,19 +108,42 @@ export default function MemberDetailScreen({ route, navigation }) {
         </AppSurface>
         <AppSpacer />
         <AppSpacer />
+        <AppText style={styles.statut}>
+          MEMBRE {getMemberStatut(selectedMember.member.statut)}
+        </AppText>
         <List.Accordion title="Infos personnelles">
-          <AppSpacer />
-          <AppLabelValue label="Nom" value={selectedMember.nom} />
-          <AppLabelValue label="Prenom" value={selectedMember.prenom} />
-          <AppLabelValue label="Contact" value={selectedMember.phone} />
-          <AppLabelValue label="Adresse" value={selectedMember.adresse} />
-          <AppLabelValue label="Profession" value={selectedMember.profession} />
-          <AppLabelValue label="Emploi" value={selectedMember.emploi} />
-          <AppSpacer />
+          <View style={styles.infoPerso}>
+            <AppSpacer />
+            {selectedMember.username && (
+              <AppLabelValue label="Pseudo" value={selectedMember.username} />
+            )}
+            {selectedMember.nom && <AppLabelValue label="Nom" value={selectedMember.nom} />}
+            {selectedMember.prenom && (
+              <AppLabelValue label="Prenom" value={selectedMember.prenom} />
+            )}
+            {selectedMember.phone && <AppLabelValue label="Contact" value={selectedMember.phone} />}
+            {selectedMember.adresse && (
+              <AppLabelValue label="Adresse" value={selectedMember.adresse} />
+            )}
+            {selectedMember.profession && (
+              <AppLabelValue label="Profession" value={selectedMember.profession} />
+            )}
+            {selectedMember.emploi && (
+              <AppLabelValue label="Emploi" value={selectedMember.emploi} />
+            )}
+            {!isPersoInfo && <AppText>Aucune info personnelle trouvée.</AppText>}
+            <AppSpacer />
+          </View>
         </List.Accordion>
         <AppSpacer />
         <AppSpacer />
         <AppButton
+          onPress={() =>
+            navigation.navigate(routes.COTISATION, {
+              screen: routes.MEMBER_COTISATION_DETAIL,
+              params: selectedMember,
+            })
+          }
           style={styles.actionButtons}
           mode="outlined"
           title={`Cotisations (${
@@ -114,6 +154,12 @@ export default function MemberDetailScreen({ route, navigation }) {
         />
         <AppSpacer />
         <AppButton
+          onPress={() =>
+            navigation.navigate(routes.ENGAGEMENT, {
+              screen: routes.MEMBER_ENGAGEMENT,
+              params: selectedMember,
+            })
+          }
           style={styles.actionButtons}
           mode="outlined"
           title={`Engagements (${
@@ -195,6 +241,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     paddingVertical: 20,
   },
+  editInfo: {
+    backgroundColor: colors.bleuFbi,
+    alignSelf: 'flex-end',
+    marginHorizontal: 10,
+  },
+  infoPerso: {
+    backgroundColor: colors.white,
+    paddingHorizontal: 10,
+  },
   leave: {
     fontSize: 15,
     backgroundColor: colors.rougeBordeau,
@@ -217,6 +272,11 @@ const styles = StyleSheet.create({
   },
   refuser: {
     color: colors.rougeBordeau,
+  },
+  statut: {
+    alignSelf: 'center',
+    marginBottom: 20,
+    fontWeight: 'bold',
   },
   surface: {
     paddingVertical: 40,

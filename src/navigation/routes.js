@@ -27,6 +27,7 @@ export default Object.freeze({
   ETAT_COTISATION: 'EtatCotisationScreen',
   PAY_COTISATION: 'PayCotisationScreen',
   NEW_MEMBER: 'NewMemberScreen',
+  MEMBER_EDIT_INFO: 'EditMemberScreen',
   ENGAGEMENT: 'EngagementNavigator',
   ETAT_ENGAGEMENT: 'EtatEngagementScreen',
   VOTE_ENGAGEMENT: 'EngagementVoteListScreen',
@@ -39,5 +40,4 @@ export default Object.freeze({
   SHOW_IMAGE: 'ShowImageScreen',
   CONTACT: 'ContactScreen',
   FAQ: 'FAQScreen',
-  CGU: 'CGUScreen',
 });

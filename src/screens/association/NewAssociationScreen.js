@@ -18,9 +18,7 @@ const validAssociation = Yup.object().shape({
   nom: Yup.string().required('Donnez un nom à votre association.'),
   description: Yup.string(),
   telAdmin: Yup.string().required('Le contact administrateur est requis.'),
-  cotisationMensuelle: Yup.number()
-    .typeError('Vous devez choisir un nombre valide')
-    .required('Indiquez votre cotisation mensuelle.'),
+  cotisationMensuelle: Yup.number(),
   frequenceCotisation: Yup.string(),
   fondInitial: Yup.number(),
   seuilSecurite: Yup.number(),
@@ -99,7 +97,7 @@ export default function NewAssociationScreen({ route }) {
         onSubmit={handleSaveAssociation}
       >
         <View style={styles.container}>
-          <AppFormField name="nom" label="nom ou sigle" />
+          <AppFormField autoCapitalize="characters" name="nom" label="nom ou sigle" />
           <AppSpacer />
           <AppFormField name="description" label="Description" />
           <AppSpacer />
@@ -109,14 +107,15 @@ export default function NewAssociationScreen({ route }) {
             label="contact de l'administrateur"
           />
           <AppSpacer />
-          <AppFormField
-            keyboardType="numeric"
-            name="cotisationMensuelle"
-            label="Montant cotisation"
-          />
-          <AppSpacer />
+
           {isAdmin() && (
             <View>
+              <AppFormField
+                keyboardType="numeric"
+                name="cotisationMensuelle"
+                label="Montant cotisation"
+              />
+              <AppSpacer />
               <AppFormField name="frequenceCotisation" label="Fréquence cotisation" />
               <AppSpacer />
               <AppFormField keyboardType="numeric" name="fondInitial" label="Fonds initial" />

@@ -86,6 +86,20 @@ export default function useEngagement() {
     const creator = selectedAssoState.associationMembers.find((user) => user.id === creatorId);
     return creator;
   };
+
+  const getConnectedMemberVoteState = (engagementId) => {
+    let voteState = '';
+    const allVotes = selectedAssoState.engagementsVotes[engagementId];
+    if (allVotes && allVotes.length > 0) {
+      const isConnectedVoted = allVotes.find(
+        (item) => item.userId === selectedAssoState.connectedMember.id
+      );
+      if (isConnectedVoted) {
+        voteState = isConnectedVoted.vote.typeVote;
+      }
+    }
+    return voteState;
+  };
   return {
     getSelectedAssoEngagementInfos,
     getVotorsNumber,
@@ -93,5 +107,6 @@ export default function useEngagement() {
     getSelectedMemberEngagements,
     getNotVoteCounter,
     getEngagementCreator,
+    getConnectedMemberVoteState,
   };
 }

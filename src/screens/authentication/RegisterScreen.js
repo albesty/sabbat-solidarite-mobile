@@ -25,7 +25,6 @@ const validUser = Yup.object().shape({
 export default function RegisterScreen({ navigation }) {
   const { getUserLoggedIn } = useAuth();
   const [securePassword, setSecurePassword] = useState(true);
-  const [secureConfirmPass, setSecureConfirmPass] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -79,10 +78,7 @@ export default function RegisterScreen({ navigation }) {
           />
           <AppSpacer />
           <AppFormField
-            right={
-              <TextInput.Icon name="eye" onPress={() => setSecureConfirmPass(!secureConfirmPass)} />
-            }
-            secureTextEntry={secureConfirmPass}
+            secureTextEntry={true}
             icon="lock"
             label="confirmer password"
             name="confirmPassword"

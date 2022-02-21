@@ -48,6 +48,7 @@ export default function ListAssociationScreen({ navigation }) {
   return (
     <>
       <FlatList
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         data={associations}
@@ -62,11 +63,11 @@ export default function ListAssociationScreen({ navigation }) {
           />
         )}
       />
+      {loading && <AppActivityIndicator />}
       {!loading && associations.length === 0 && !error && (
         <AppWaitInfo info="Aucune association trouvée." />
       )}
       {!loading && error && <AppWaitInfo info={`Erreur: ${error}`} />}
-      {loading && <AppActivityIndicator />}
 
       <AddNewButton onPress={() => navigation.navigate(routes.NEW_ASSOCIATION)} />
     </>

@@ -20,6 +20,7 @@ export default function EtatCotisationScreen({ navigation }) {
   return (
     <>
       <FlatList
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
         data={getSelectedAssoCurrentMembers().actifMembers}
         keyExtractor={(item) => item.id + 'cotisation'}
@@ -40,7 +41,7 @@ export default function EtatCotisationScreen({ navigation }) {
       />
       <AddNewButton
         notif={notPayedCompter()}
-        icon="view-list"
+        icon="credit-card-multiple"
         onPress={() => navigation.navigate(routes.LIST_COTISATION)}
       />
       {!loading && !error && selectedAssoState.associationMembers.length === 0 && (

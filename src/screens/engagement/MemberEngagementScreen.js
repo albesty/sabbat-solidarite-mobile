@@ -36,6 +36,7 @@ export default function MemberEngagementScreen({ navigation, route }) {
       </View>
       {getSelectedMemberEngagements(selectedMember.member.id).totalEngagements > 0 && (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={getSelectedMemberEngagements(selectedMember.member.id).memberEngagements}
           keyExtractor={(item) => item.id.toString() + 'memberengage'}
           renderItem={({ item }) => <EngagementItem engagement={item} />}

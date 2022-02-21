@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AssociationCard from '../../components/association/AssociationCard';
 import AppSurface from '../../components/common/AppSurface';
@@ -16,12 +16,14 @@ import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
 import { getConnectedMemberRoles } from '../../api/services/selectedAssociationServices';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
+import useUploadImage from '../../hooks/useUploadImage';
 
 export default function CaisseScreen({ route, navigation }) {
   const selectedAssociation = route.params;
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
   const [showFunds, setShowFunds] = useState(false);
   const { formatFonds, showLargeImage } = useAssociation();
+  const { getFilePrint } = useUploadImage();
   const {
     getSelectedAssoMembersCotisations,
     getselectedAssoMembers,
@@ -40,15 +42,17 @@ export default function CaisseScreen({ route, navigation }) {
     await getSelectedAssoAllCotisations(selectedAssociation.id);
     await getSelectedAssoMembersCotisations(selectedAssociation.id);
     await getSelectedAssoMembersEngagements(selectedAssociation.id);
-    if (selectedAssoState.connectedMember.member) {
+    const connectedMember = selectedAssoState.connectedMember.member;
+    if (connectedMember) {
       const response = await getConnectedMemberRoles({
-        memberId: selectedAssoState.connectedMember.member.id,
+        memberId: connectedMember.id,
       });
       dispatchSelectedAsso({
         type: selectedAssoActions.connected_member_roles,
         roles: response.data,
       });
     }
+    dispatchSelectedAsso({ type: selectedAssoActions.must_update, updated: false });
     setLoading(false);
   });
 
@@ -59,19 +63,16 @@ export default function CaisseScreen({ route, navigation }) {
     });
   };
 
-  const handleReadReglement = () => {
-    alert(
-      "Aucun reglement trouvé, veuillez rediger votre reglement puis l'envoyer à Sabbat-Solidarité pour la mise à jour."
-    );
-  };
-
   useEffect(() => {
     getAssociationMembers();
   }, []);
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.contentContainerStyle}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainerStyle}
+      >
         <AssociationCard
           handleValidPress={() => showLargeImage(selectedAssociation.avatar)}
           cardStyle={{
@@ -82,6 +83,9 @@ export default function CaisseScreen({ route, navigation }) {
           association={selectedAssociation}
         />
         <AppSpacer />
+        {selectedAssoState.update && (
+          <AppIconButton onPress={getAssociationMembers} style={styles.refresh} icon="refresh" />
+        )}
         <AppSpacer />
 
         <AppSurface onPress={() => null} info="La caisse" style={styles.soldeContainer}>
@@ -177,8 +181,8 @@ export default function CaisseScreen({ route, navigation }) {
           icon="file-pdf"
           labelStyle={styles.reglementLabel}
           style={styles.buttons}
-          onPress={handleReadReglement}
-          title="Consulter le reglement."
+          onPress={() => getFilePrint(selectedAssociation.reglementInterieur)}
+          title="Consulter le reglement"
           mode="text"
         />
       </ScrollView>
@@ -231,6 +235,7 @@ const styles = StyleSheet.create({
   },
   reglementLabel: {
     color: colors.black,
+    paddingVertical: 5,
   },
   selfMemberButton: {
     marginVertical: 10,
@@ -242,5 +247,11 @@ const styles = StyleSheet.create({
   },
   memberCompteLabel: {
     paddingHorizontal: 40,
+  },
+  refresh: {
+    alignSelf: 'flex-end',
+    backgroundColor: colors.bleuFbi,
+    marginRight: 20,
+    marginBottom: -20,
   },
 });

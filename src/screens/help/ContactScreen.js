@@ -4,8 +4,15 @@ import React from 'react';
 import AppText from '../../components/common/AppText';
 import { colors } from '../../utils/styles';
 import routes from '../../navigation/routes';
+import useUploadImage from '../../hooks/useUploadImage';
+import { Asset } from 'expo-asset';
 
 export default function ContactScreen({ navigation }) {
+  const { getFilePrint } = useUploadImage();
+  const handleGetCGU = () => {
+    const url = Asset.fromModule(require('../../../assets/CGU_SOLIDARITE.pdf')).uri;
+    getFilePrint(url);
+  };
   return (
     <ScrollView contentContainerStyle={styles.contentContainerStyle}>
       <Image
@@ -47,7 +54,7 @@ export default function ContactScreen({ navigation }) {
         </View>
         <View style={styles.faq}>
           <AppText>Lire les</AppText>
-          <AppText onPress={() => navigation.navigate(routes.CGU)} style={styles.faqText}>
+          <AppText onPress={handleGetCGU} style={styles.faqText}>
             Conditions Générales d'Utilisation
           </AppText>
         </View>

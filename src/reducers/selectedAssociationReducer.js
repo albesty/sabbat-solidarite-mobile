@@ -14,6 +14,7 @@ export const selectedAssoActions = {
   pay_tranche: 'PAY_TRANCHE',
   update_member: 'UPDATE_MEMBER',
   delete_one_engagement: 'DELETE_ENGAGEMENT',
+  must_update: 'MUST_UPDATE',
 };
 
 export const selectedAssoReducer = (state, action) => {
@@ -80,6 +81,8 @@ export const selectedAssoReducer = (state, action) => {
       const deletedId = action.engagementId;
       const newEngageList = state.associationEngagements.filter((item) => item.id !== deletedId);
       return { ...state, associationEngagements: newEngageList };
+    case 'MUST_UPDATE':
+      return { ...state, update: action.updated };
     default:
       return state;
   }

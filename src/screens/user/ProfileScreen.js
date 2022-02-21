@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import React, { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import AppLabelValueAction from '../../components/common/AppLabelValueAction';
@@ -8,7 +8,7 @@ export default function ProfileScreen() {
   const user = state.user;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
       <AppLabelValueAction label="Pseudo" />
       <AppLabelValueAction label="Nom" />
       <AppLabelValueAction label="Prenom" />

@@ -134,7 +134,7 @@ export default function NewTransactionScreen({ route, navigation }) {
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
         <RadioButtonWithLabel
           onSelectButton={mobileTransaction}
           label="Mobile money"

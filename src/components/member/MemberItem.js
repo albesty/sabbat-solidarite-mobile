@@ -5,6 +5,7 @@ import AppText from '../common/AppText';
 import AppSurface from '../common/AppSurface';
 import AppSpacer from '../common/AppSpacer';
 import useAssociation from '../../hooks/useAssociation';
+import useAuth from '../../hooks/useAuth';
 
 export default function MemberItem({
   member,
@@ -17,6 +18,7 @@ export default function MemberItem({
   moreInfoStyle,
 }) {
   const { formatFonds } = useAssociation();
+  const { getMemberStatut } = useAuth();
 
   return (
     <AppSurface
@@ -32,7 +34,7 @@ export default function MemberItem({
         <View>
           <AppText style={styles.info}>{member.username ? member.username : member.email}</AppText>
           <AppText style={styles.statut}>
-            {member.member.statut === 'new' ? 'Nouveau' : member.member.statut}
+            {member.member.statut === 'new' ? 'Nouveau' : getMemberStatut(member.member.statut)}
           </AppText>
         </View>
       </View>
