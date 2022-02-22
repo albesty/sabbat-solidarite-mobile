@@ -15,6 +15,8 @@ const getSelectedUserData = (data) => apiClient.post(`${userUrl}/userData`, data
 const editUserInfo = (data) => apiClient.patch(`${userUrl}/editInfo`, data);
 
 const changePassword = (data) => apiClient.patch(`${userUrl}/changeCredentials`, data);
+
+const getAllUsers = () => apiClient.get(`${userUrl}/allUsers`);
 export {
   login,
   register,
@@ -23,4 +25,5 @@ export {
   editUserInfo,
   changePassword,
   setPushNotifToken,
+  getAllUsers,
 };

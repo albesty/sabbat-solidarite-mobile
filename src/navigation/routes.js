@@ -35,6 +35,7 @@ export default Object.freeze({
   NEW_ENGAGEMENT: 'NewEngagementScreen',
   TRANCHE_ITEM: 'TrancheItemScreen',
   USER: 'UserCompteNavigator',
+  USER_ADMIN: 'UserAdminScreen',
   ENGAGEMENT_VOTANTS: 'EngagementVotantScreen',
   MEMBER_COTISATION_DETAIL: 'MemberCotisationDetailScreen',
   SHOW_IMAGE: 'ShowImageScreen',

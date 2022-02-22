@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
-import AppText from './AppText';
 import AppIconButton from './AppIconButton';
 import { colors } from '../../utils/styles';
 import { TextInput } from 'react-native-paper';
@@ -10,10 +9,9 @@ import { actions } from '../../reducers/authReducer';
 import AppAnimation from './AppAnimation';
 import AppLabelAndValueSimple from './AppLabelAndValueSimple';
 
-export default function AppLabelValueAction({ label }) {
+export default function AppLabelValueAction({ label, currentUser }) {
   const { state, dispatch } = useContext(AuthContext);
   const [editing, setEditing] = useState(false);
-  const currentUser = state.user;
   const [currentLabelValue, setCurrentLabelValue] = useState('');
   const [validateInfo, setValideInfo] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,7 +20,7 @@ export default function AppLabelValueAction({ label }) {
     setLoading(true);
     const editedLabel = label.toLowerCase();
     let data = {
-      id: state.user.id,
+      id: currentUser.id,
     };
     data[`${editedLabel}`] = currentLabelValue;
     const response = await editUserInfo(data);
@@ -31,7 +29,9 @@ export default function AppLabelValueAction({ label }) {
       alert('Erreur lors de la mise à jour de vos infos.');
       return;
     }
-    dispatch({ type: actions.update_info, updatedUser: response.data });
+    if (state.user.id === currentUser.id) {
+      dispatch({ type: actions.update_info, updatedUser: response.data });
+    }
     setEditing(false);
     setLoading(false);
     alert('Vos infos ont été mises à jour avec succès.');
@@ -50,10 +50,6 @@ export default function AppLabelValueAction({ label }) {
     <>
       <View style={styles.container}>
         <View>
-          {/* <AppText style={styles.label}>{label}</AppText>
-          <AppText style={styles.value}>
-            {currentLabelValue ? currentLabelValue : 'editer pour ajouter'}
-          </AppText> */}
           <AppLabelAndValueSimple
             label={label}
             value={currentLabelValue ? currentLabelValue : 'editer pour ajouter'}

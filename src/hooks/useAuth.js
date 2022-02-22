@@ -14,6 +14,12 @@ export default function useAuth() {
   const { dispatchTransaction } = useContext(TransactionContext);
   const user = state.user;
 
+  const isValidEmail = (email) => {
+    const re =
+      /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/;
+    return re.test(email);
+  };
+
   const isAdmin = () => {
     let isMemberAdmin = false;
     const userRoles = user?.roles;
@@ -52,10 +58,11 @@ export default function useAuth() {
     return error;
   };
 
-  const getTransactions = async () => {
+  const getTransactions = async (userId) => {
     let errorState = null;
     let data = [];
-    const response = await getAllTransactions({ userId: state.user.id });
+    const id = isAdmin() ? userId : state.user.id;
+    const response = await getAllTransactions({ userId: id });
     if (!response.ok) {
       errorState = response.data;
       alert("Nous n'avons pas pu recupérer vos anciennes transactions.");
@@ -93,5 +100,6 @@ export default function useAuth() {
     isModerator,
     getLogout,
     getMemberStatut,
+    isValidEmail,
   };
 }

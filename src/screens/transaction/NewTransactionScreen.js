@@ -16,7 +16,7 @@ import useAssociation from '../../hooks/useAssociation';
 import useAuth from '../../hooks/useAuth';
 import AppInput from '../../components/common/AppInput';
 import { List } from 'react-native-paper';
-
+import AppMessage from '../../components/common/AppMessage';
 const validTransaction = Yup.object().shape({
   montant: Yup.number()
     .typeError('Montant invalide')
@@ -25,10 +25,11 @@ const validTransaction = Yup.object().shape({
 });
 export default function NewTransactionScreen({ route, navigation }) {
   const currentTransaction = route.params;
-  const { state, dispatch } = useContext(AuthContext);
+  const user = route.params.user;
+  const { dispatch } = useContext(AuthContext);
   const { dataSorter } = useAssociation();
   const { transactionState, dispatchTransaction } = useContext(TransactionContext);
-  const { getTransactions } = useAuth();
+  const { getTransactions, isAdmin } = useAuth();
   const [loading, setLoading] = useState(false);
   const [mobileTransaction, setMobileTransaction] = useState(false);
   const [onCreditCardSelect, setOnCreditCardSelect] = useState(false);
@@ -49,7 +50,7 @@ export default function NewTransactionScreen({ route, navigation }) {
     setLoading(true);
     const type = currentTransaction.transactionName;
     const data = {
-      creatorId: state.user.id,
+      creatorId: user.id,
       type,
       libelle: type === 'rechargement' ? 'Rechargement de portefeuille' : 'Retrait de fonds',
       numero: numero,
@@ -134,87 +135,92 @@ export default function NewTransactionScreen({ route, navigation }) {
 
   return (
     <>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
-        <RadioButtonWithLabel
-          onSelectButton={mobileTransaction}
-          label="Mobile money"
-          onPress={handleShowMobileInput}
-        >
-          <Image style={styles.moneyFlag} source={require('../../../assets/omoney.png')} />
-          <Image style={styles.moneyFlag} source={require('../../../assets/mobileMoney.jpg')} />
-          <Image style={styles.moneyFlag} source={require('../../../assets/moovMoney.jpg')} />
-        </RadioButtonWithLabel>
-        {mobileTransaction && (
-          <View style={styles.formContainer}>
-            <AppForm
-              initialValues={{
-                montant: '',
-              }}
-              validationSchema={validTransaction}
-              onSubmit={handleAddTransaction}
-            >
-              <AppInput
-                keyboardType="numeric"
-                style={styles.formFiel}
-                value={numero}
-                onChangeText={(val) => {
-                  setNumero(val);
-                  handleCheckNumero(val);
+      {isAdmin() && (
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
+          <RadioButtonWithLabel
+            onSelectButton={mobileTransaction}
+            label="Mobile money"
+            onPress={handleShowMobileInput}
+          >
+            <Image style={styles.moneyFlag} source={require('../../../assets/omoney.png')} />
+            <Image style={styles.moneyFlag} source={require('../../../assets/mobileMoney.jpg')} />
+            <Image style={styles.moneyFlag} source={require('../../../assets/moovMoney.jpg')} />
+          </RadioButtonWithLabel>
+          {mobileTransaction && (
+            <View style={styles.formContainer}>
+              <AppForm
+                initialValues={{
+                  montant: '',
                 }}
-                label="numero"
-                placeholder="Ex: 0708525827"
-                maxLength={14}
-              />
-              {inputInfo && <Image style={styles.inputNumero} source={inputInfo} />}
-              <AppSpacer />
-              <AppFormField
-                style={styles.formFiel}
-                keyboardType="numeric"
-                name="montant"
-                label="Montant"
-                placeholder="0.0"
-              />
-              <AppSpacer />
-              <AppSpacer />
-              <AppSubmitButton style={styles.formFiel} title="Valider" />
-            </AppForm>
-          </View>
-        )}
-        <AppSpacer />
-        <RadioButtonWithLabel
-          label="Carte de crédit"
-          onPress={() => {
-            setMobileTransaction(false);
-            setOnCreditCardSelect(!onCreditCardSelect);
-          }}
-          onSelectButton={onCreditCardSelect}
-        >
-          {onCreditCardSelect && (
-            <View style={styles.creditContainer}>
-              <AppText>Module encours de developpement.</AppText>
+                validationSchema={validTransaction}
+                onSubmit={handleAddTransaction}
+              >
+                <AppInput
+                  keyboardType="numeric"
+                  style={styles.formFiel}
+                  value={numero}
+                  onChangeText={(val) => {
+                    setNumero(val);
+                    handleCheckNumero(val);
+                  }}
+                  label="numero"
+                  placeholder="Ex: 0708525827"
+                  maxLength={14}
+                />
+                {inputInfo && <Image style={styles.inputNumero} source={inputInfo} />}
+                <AppSpacer />
+                <AppFormField
+                  style={styles.formFiel}
+                  keyboardType="numeric"
+                  name="montant"
+                  label="Montant"
+                  placeholder="0.0"
+                />
+                <AppSpacer />
+                <AppSpacer />
+                <AppSubmitButton style={styles.formFiel} title="Valider" />
+              </AppForm>
             </View>
           )}
-        </RadioButtonWithLabel>
-        {favoriteNumbers.length > 0 && (
-          <ScrollView>
-            <List.Accordion
-              left={(props) => <List.Icon {...props} icon="card-account-phone" />}
-              title="Numeros favoris"
-            >
-              {favoriteNumbers.map((item, index) => (
-                <List.Item
-                  key={item.number + index}
-                  title={item.number}
-                  onPress={() => {
-                    setNumero(item.number);
-                    handleCheckNumero(item.number);
-                  }}
-                />
-              ))}
-            </List.Accordion>
-          </ScrollView>
-        )}
-      </ScrollView>
+          <AppSpacer />
+          <RadioButtonWithLabel
+            label="Carte de crédit"
+            onPress={() => {
+              setMobileTransaction(false);
+              setOnCreditCardSelect(!onCreditCardSelect);
+            }}
+            onSelectButton={onCreditCardSelect}
+          >
+            {onCreditCardSelect && (
+              <View style={styles.creditContainer}>
+                <AppText>Module encours de developpement.</AppText>
+              </View>
+            )}
+          </RadioButtonWithLabel>
+          {favoriteNumbers.length > 0 && (
+            <ScrollView>
+              <List.Accordion
+                left={(props) => <List.Icon {...props} icon="card-account-phone" />}
+                title="Numeros favoris"
+              >
+                {favoriteNumbers.map((item, index) => (
+                  <List.Item
+                    key={item.number + index}
+                    title={item.number}
+                    onPress={() => {
+                      setNumero(item.number);
+                      handleCheckNumero(item.number);
+                    }}
+                  />
+                ))}
+              </List.Accordion>
+            </ScrollView>
+          )}
+        </ScrollView>
+      )}
+      {!isAdmin() && (
+        <AppMessage message="Ce module est encours de developpement. Il sera disponible dans quelques jours. Merci de votre patience." />
+      )}
 
       {loading && <AppActivityIndicator />}
     </>

@@ -3,27 +3,25 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import routes from '../../navigation/routes';
 import useAssociation from '../../hooks/useAssociation';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
-import AppWaitInfo from '../../components/common/AppWaitInfo';
 import { AssociationContext } from '../../contexts/AssociationContext';
 import useMember from '../../hooks/useMember';
 import useAuth from '../../hooks/useAuth';
 import AppButton from '../../components/common/AppButton';
 import AssociationCard from '../../components/association/AssociationCard';
 import { MemberContext } from '../../contexts/MemberContext';
-import AppText from '../../components/common/AppText';
-import AppSpacer from '../../components/common/AppSpacer';
-import AppSeparator from '../../components/common/AppSeparator';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
 import { colors } from '../../utils/styles';
 import useNotifications from '../../hooks/useNotifications';
 import WelcomeModal from '../user/WelcomeModal';
 import AppMessage from '../../components/common/AppMessage';
+import { AuthContext } from '../../contexts/AuthContext';
 
 export default function StarterScreen({ navigation }) {
   const { registerForPushNotificationsAsync } = useNotifications();
 
   const { memberState } = useContext(MemberContext);
+  const { state } = useContext(AuthContext);
   const { getLogout, isAdmin } = useAuth();
   const { associationState } = useContext(AssociationContext);
   const { dispatchSelectedAsso } = useContext(SelectedAssociationContext);
@@ -135,7 +133,10 @@ export default function StarterScreen({ navigation }) {
         />
         <AppButton
           onPress={() =>
-            navigation.navigate(routes.TRANSACTION, { screen: routes.TRANSACTION_HOME })
+            navigation.navigate(routes.TRANSACTION, {
+              screen: routes.TRANSACTION_HOME,
+              params: state.user,
+            })
           }
           labelStyle={styles.titleStyle}
           style={styles.links}

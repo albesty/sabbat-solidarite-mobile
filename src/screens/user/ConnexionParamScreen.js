@@ -1,13 +1,10 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import React, { useContext, useState } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { List, TextInput } from 'react-native-paper';
-import AppText from '../../components/common/AppText';
 import AppSpacer from '../../components/common/AppSpacer';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import { changePassword } from '../../api/services/authServices';
-import { AuthContext } from '../../contexts/AuthContext';
-import useAuth from '../../hooks/useAuth';
 import routes from '../../navigation/routes';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 
@@ -29,9 +26,8 @@ const valideChangePass = Yup.object().shape({
 const valideEmail = Yup.object().shape({
   email: Yup.string().email('Adresse mail invalide').required('Adresse email requise.'),
 });
-export default function ConnexionParamScreen({ navigation }) {
-  const { state } = useContext(AuthContext);
-  const { getLogout } = useAuth();
+export default function ConnexionParamScreen({ navigation, route }) {
+  const selectedUser = route.params;
   const [secureOldPass, setSecureOldPass] = useState(true);
   const [secureNewPass, setSecureNewPass] = useState(true);
   const [secureConfirmPass, setSecureConfirmPass] = useState(true);
@@ -42,12 +38,12 @@ export default function ConnexionParamScreen({ navigation }) {
     let userData = {};
     if (data.email) {
       userData = {
-        userId: state.user.id,
+        userId: selectedUser.id,
         email: data.email,
       };
     } else {
       userData = {
-        userId: state.user.id,
+        userId: selectedUser.id,
         oldPass: data.oldPass,
         newPass: data.newPass,
       };
@@ -58,6 +54,7 @@ export default function ConnexionParamScreen({ navigation }) {
       alert('Impossible de changer le mot de passe, veuillez reessayer plutard.');
       return;
     }
+    resetForm();
     setLoading(false);
     alert('Vos paramètres ont été modifiés avec succès.');
     navigation.navigate(routes.WELCOME);

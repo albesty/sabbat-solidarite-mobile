@@ -9,6 +9,7 @@ const initialState = {
   error: null,
   user: null,
   devicePushToken: '',
+  selectedUser: null,
 };
 export default function AuthContextProvider({ children }) {
   const [state, dispatch] = useReducer(authReducer, initialState);

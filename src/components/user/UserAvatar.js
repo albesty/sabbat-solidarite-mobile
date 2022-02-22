@@ -1,7 +1,6 @@
 import { StyleSheet, TouchableWithoutFeedback, View, Image } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { colors } from '../../utils/styles';
-import { AuthContext } from '../../contexts/AuthContext';
 import AppAnimation from '../common/AppAnimation';
 
 export default function UserAvatar({ onPress, avatarStyle, user, loadingContainer }) {

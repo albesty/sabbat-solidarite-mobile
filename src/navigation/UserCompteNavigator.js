@@ -7,10 +7,11 @@ import HeaderButton from '../components/navigation/HeaderButton';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import ConnexionParamScreen from '../screens/user/ConnexionParamScreen';
 import NavigationTitle from '../components/navigation/NavigationTitle';
+import UserAdminScreen from '../screens/user/UserAdminScreen';
 
 const UserCompteStack = createStackNavigator();
 
-export default function UserCompteNavigator() {
+export default function UserCompteNavigator({ route }) {
   return (
     <UserCompteStack.Navigator
       screenOptions={({ navigation, route }) => ({
@@ -21,6 +22,7 @@ export default function UserCompteNavigator() {
       })}
     >
       <UserCompteStack.Screen
+        initialParams={route.params}
         options={{
           headerTitle: () => <NavigationTitle title="Portefeuille" />,
         }}
@@ -40,6 +42,13 @@ export default function UserCompteNavigator() {
         }}
         name={routes.PARAM}
         component={ConnexionParamScreen}
+      />
+      <UserCompteStack.Screen
+        options={{
+          headerTitle: () => <NavigationTitle title="Admin user" />,
+        }}
+        name={routes.USER_ADMIN}
+        component={UserAdminScreen}
       />
     </UserCompteStack.Navigator>
   );

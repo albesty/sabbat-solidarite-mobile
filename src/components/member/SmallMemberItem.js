@@ -13,7 +13,9 @@ export default function SmallMemberItem({ creator, style, onPress, children }) {
           <AppText style={styles.creatorText}>
             {creator.username ? creator.username : creator.email}
           </AppText>
-          <AppText style={styles.creatorText}>{creator.member.statut}</AppText>
+          <AppText style={styles.creatorText}>
+            {creator.member ? creator.member.statut : creator.phone ? creator.phone : null}
+          </AppText>
         </View>
       </View>
       <View>{children}</View>

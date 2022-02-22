@@ -12,7 +12,8 @@ import AppSeparator from '../../components/common/AppSeparator';
 import AppMessage from '../../components/common/AppMessage';
 import useAuth from '../../hooks/useAuth';
 
-export default function TransactionScreen() {
+export default function TransactionScreen({ route }) {
+  const selectedUser = route.params;
   const { formatFonds, formatDate, dataSorter } = useAssociation();
   const { getTransactions } = useAuth();
   const { transactionState } = useContext(TransactionContext);
@@ -22,7 +23,7 @@ export default function TransactionScreen() {
 
   const getUserTransactions = useCallback(async () => {
     setLoading(true);
-    const { errorState, data } = await getTransactions();
+    const { errorState, data } = await getTransactions(selectedUser.id);
     if (errorState) {
       setLoading(false);
       return;

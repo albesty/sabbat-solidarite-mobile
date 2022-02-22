@@ -12,17 +12,14 @@ import routes from '../../navigation/routes';
 import { colors } from '../../utils/styles';
 
 const validUser = Yup.object().shape({
-  email: Yup.string()
-    .email('Adresse mail invalide.')
-    .required('Adresse mail requise.')
-    .label('Email'),
+  email: Yup.string().required('Adresse mail requise.').label('Email'),
   password: Yup.string()
     .min(6, 'Le mot de passe doit être de 6 caractères minimum.')
     .required('Mot de passe requis.'),
 });
 
 export default function LoginScreen({ navigation }) {
-  const { getUserLoggedIn } = useAuth();
+  const { getUserLoggedIn, isValidEmail } = useAuth();
   const [entrySecured, setEntrySecured] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,7 +27,19 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async (user, { resetForm }) => {
     setLoading(true);
     setError(null);
-    const connexionError = await getUserLoggedIn(user);
+    let data;
+    if (isValidEmail(user.email)) {
+      data = {
+        email: user.email,
+        password: user.password,
+      };
+    } else {
+      data = {
+        username: user.email,
+        password: user.password,
+      };
+    }
+    const connexionError = await getUserLoggedIn(data);
     if (connexionError) {
       setError(connexionError);
       setLoading(false);
@@ -61,7 +70,7 @@ export default function LoginScreen({ navigation }) {
             textContentType="emailAddress"
             keyboardType="email-address"
             icon="email"
-            label="email"
+            label="email / pseudo "
             name="email"
           />
           <AppSpacer />

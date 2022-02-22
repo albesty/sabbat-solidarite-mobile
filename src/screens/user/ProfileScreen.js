@@ -1,28 +1,25 @@
 import { StyleSheet, ScrollView } from 'react-native';
-import React, { useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import React from 'react';
 import AppLabelValueAction from '../../components/common/AppLabelValueAction';
 
-export default function ProfileScreen() {
-  const { state } = useContext(AuthContext);
-  const user = state.user;
-
+export default function ProfileScreen({ route }) {
+  const selectedUser = route.params;
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
-      <AppLabelValueAction label="Pseudo" />
-      <AppLabelValueAction label="Nom" />
-      <AppLabelValueAction label="Prenom" />
-      <AppLabelValueAction label="Phone" />
-      <AppLabelValueAction label="Adresse" />
-      <AppLabelValueAction label="profession" />
-      <AppLabelValueAction label="Emploi" />
+      <AppLabelValueAction currentUser={selectedUser} label="Pseudo" />
+      <AppLabelValueAction currentUser={selectedUser} label="Nom" />
+      <AppLabelValueAction currentUser={selectedUser} label="Prenom" />
+      <AppLabelValueAction currentUser={selectedUser} label="Phone" />
+      <AppLabelValueAction currentUser={selectedUser} label="Adresse" />
+      <AppLabelValueAction currentUser={selectedUser} label="profession" />
+      <AppLabelValueAction currentUser={selectedUser} label="Emploi" />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
+    paddingVertical: 20,
     marginHorizontal: 10,
   },
 });

@@ -1,13 +1,5 @@
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  Image,
-  BackHandler,
-} from 'react-native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppImagePicker from '../../components/common/AppImagePicker';
 import UserAvatar from '../../components/user/UserAvatar';
@@ -26,10 +18,13 @@ import useAssociation from '../../hooks/useAssociation';
 import AppButton from '../../components/common/AppButton';
 import { List } from 'react-native-paper';
 import routes from '../../navigation/routes';
+import useAuth from '../../hooks/useAuth';
+import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 
 export default function CompteScreen({ route, navigation }) {
   const { state, dispatch } = useContext(AuthContext);
-  const selectedUser = route.params ? route.params : state.user;
+  const { isAdmin } = useAuth();
+  const selectedUser = route.params;
   const { formatFonds, showLargeImage } = useAssociation();
   const { uploader } = useUploadImage();
   const [loading, setLoading] = useState(false);
@@ -46,6 +41,29 @@ export default function CompteScreen({ route, navigation }) {
   const [permutPiece, setPermutPiece] = useState(false);
 
   const showLoadingPieceContainer = uploadingPiece || piecesLoading;
+
+  const getUserState = async () => {
+    setLoading(true);
+    const user = isAdmin() ? state.selectedUser : state.user;
+    const data = {
+      userId: user.id,
+    };
+    const selectedUserData = await getSelectedUserData(data);
+    if (!selectedUserData.ok) {
+      setLoading(false);
+      alert("Erreur: nous n'avons pas pu mettre vos informations à jour.");
+    }
+    setCurrentUser(selectedUserData.data);
+    setLoading(false);
+    dispatch({ type: actions.select_user, user: null });
+    dispatch({ type: actions.update_state, updateState: false });
+  };
+
+  useEffect(() => {
+    if (state.updateState || state.selectedUser) {
+      getUserState();
+    }
+  }, [state.updateState, state.selectedUser]);
 
   const handleSelectPieces = (image) => {
     setImageModalVisible(false);
@@ -125,27 +143,6 @@ export default function CompteScreen({ route, navigation }) {
     await handleSaveImages(image);
   };
 
-  const getUserState = useCallback(async () => {
-    setLoading(true);
-    const selectedUserData = await getSelectedUserData({ userId: state.user.id });
-    if (!selectedUserData.ok) {
-      setLoading(false);
-      alert("Erreur: nous n'avons pas pu mettre vos informations à jour.");
-    }
-    setCurrentUser(selectedUserData.data);
-    dispatch({ type: actions.loginOrRegister, user: selectedUserData.data });
-    dispatch({ type: actions.update_state, updateState: false });
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (state.updateState) {
-        getUserState();
-      }
-    });
-    return () => unsubscribe;
-  }, [navigation, state.updateState]);
-
   return (
     <>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentStyle}>
@@ -192,7 +189,7 @@ export default function CompteScreen({ route, navigation }) {
             onPress={() =>
               navigation.navigate(routes.TRANSACTION, {
                 screen: routes.NEW_TRANSACTION,
-                params: { transactionName: 'rechargement' },
+                params: { transactionName: 'rechargement', user: currentUser },
               })
             }
             icon="credit-card-plus"
@@ -204,7 +201,7 @@ export default function CompteScreen({ route, navigation }) {
             onPress={() =>
               navigation.navigate(routes.TRANSACTION, {
                 screen: routes.NEW_TRANSACTION,
-                params: { transactionName: 'retrait' },
+                params: { transactionName: 'retrait', user: currentUser },
               })
             }
             style={styles.retirerButton}
@@ -312,18 +309,21 @@ export default function CompteScreen({ route, navigation }) {
         <List.Item
           title="Transactions"
           onPress={() =>
-            navigation.navigate(routes.TRANSACTION, { screen: routes.TRANSACTION_HOME })
+            navigation.navigate(routes.TRANSACTION, {
+              screen: routes.TRANSACTION_HOME,
+              params: selectedUser,
+            })
           }
           left={(props) => <List.Icon {...props} icon="wallet-outline" />}
         />
 
         <List.Item
-          onPress={() => navigation.navigate(routes.PROFILE)}
+          onPress={() => navigation.navigate(routes.PROFILE, selectedUser)}
           left={(props) => <List.Icon {...props} icon="account-details" />}
           title="Profile"
         />
         <List.Item
-          onPress={() => navigation.navigate(routes.PARAM)}
+          onPress={() => navigation.navigate(routes.PARAM, selectedUser)}
           left={(props) => <List.Icon {...props} icon="cog" />}
           title="Paramètres de connexion"
         />
@@ -332,6 +332,13 @@ export default function CompteScreen({ route, navigation }) {
           left={(props) => <List.Icon {...props} icon="help-circle" />}
           title="Besoin d'aide?"
         />
+        {isAdmin() && (
+          <List.Item
+            onPress={() => navigation.navigate(routes.USER_ADMIN)}
+            left={(props) => <List.Icon {...props} icon="account-settings" />}
+            title="Admin user panel"
+          />
+        )}
       </ScrollView>
 
       <AppImagePicker
@@ -342,6 +349,7 @@ export default function CompteScreen({ route, navigation }) {
         onCloseImageModal={() => setImageModalVisible(false)}
         imageModalVisible={imageModalVisible}
       />
+      {loading && <AppActivityIndicator />}
     </>
   );
 }

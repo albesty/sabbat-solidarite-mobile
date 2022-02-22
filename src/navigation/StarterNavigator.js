@@ -46,7 +46,7 @@ export default function StarterNavigator({ navigation }) {
             <UserAvatar
               user={state.user}
               loadingContainer={styles.loadingContainer}
-              onPress={() => navigation.navigate(routes.USER)}
+              onPress={() => navigation.navigate(routes.USER, state.user)}
             />
           ),
           headerTitle: () => null,
