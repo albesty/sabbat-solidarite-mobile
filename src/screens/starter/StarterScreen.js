@@ -19,7 +19,6 @@ import { AuthContext } from '../../contexts/AuthContext';
 
 export default function StarterScreen({ navigation }) {
   const { registerForPushNotificationsAsync } = useNotifications();
-
   const { memberState } = useContext(MemberContext);
   const { state } = useContext(AuthContext);
   const { getLogout, isAdmin } = useAuth();

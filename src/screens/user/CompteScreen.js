@@ -44,7 +44,8 @@ export default function CompteScreen({ route, navigation }) {
 
   const getUserState = async () => {
     setLoading(true);
-    const user = isAdmin() ? state.selectedUser : state.user;
+    const adminUser = state.selectedUser ? state.selectedUser : state.user;
+    const user = isAdmin() ? adminUser : state.user;
     const data = {
       userId: user.id,
     };
@@ -175,10 +176,7 @@ export default function CompteScreen({ route, navigation }) {
         <AppSpacer />
         <AppSurface style={styles.wallet}>
           <View style={{ alignSelf: 'flex-start' }}>
-            <AppAnimation
-              size={100}
-              source={require('../../../assets/animations/wallet-animation.json')}
-            />
+            <AppAnimation size={100} source={require('../../../assets/wallet-animation.json')} />
           </View>
           <AppSpacer />
           <AppText style={styles.walletFunds}>{formatFonds(currentUser.wallet)}</AppText>
@@ -209,11 +207,11 @@ export default function CompteScreen({ route, navigation }) {
             <MaterialCommunityIcons
               size={20}
               name="credit-card-minus"
-              color={currentUser.wallet > 100 ? colors.vert : colors.rougeBordeau}
+              color={currentUser.wallet > 100 ? colors.bleuFbi : colors.rougeBordeau}
             />
             <AppText
               style={{
-                color: currentUser.wallet > 100 ? colors.vert : colors.rougeBordeau,
+                color: currentUser.wallet > 100 ? colors.bleuFbi : colors.rougeBordeau,
                 marginLeft: 5,
               }}
             >
@@ -438,6 +436,7 @@ const styles = StyleSheet.create({
 
   rechargeLabel: {
     paddingVertical: 5,
+    color: colors.vert,
   },
   retourneButton: {
     position: 'absolute',

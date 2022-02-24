@@ -4,6 +4,7 @@ import useEngagement from '../../hooks/useEngagement';
 import EngagementItem from '../../components/engagement/EngagementItem';
 import AppSeparator from '../../components/common/AppSeparator';
 import useAssociation from '../../hooks/useAssociation';
+import AppMessage from '../../components/common/AppMessage';
 
 export default function EngagementVoteListScreen() {
   const { getSelectedAssoEngagementInfos } = useEngagement();
@@ -11,14 +12,19 @@ export default function EngagementVoteListScreen() {
 
   return (
     <>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainerStyle}
-        data={dataSorter(getSelectedAssoEngagementInfos().notValidEngagements)}
-        keyExtractor={(item) => item.id.toString() + 'voting'}
-        renderItem={({ item }) => <EngagementItem engagement={item} />}
-        ItemSeparatorComponent={AppSeparator}
-      />
+      {getSelectedAssoEngagementInfos().notValidEngagements.length > 0 && (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainerStyle}
+          data={dataSorter(getSelectedAssoEngagementInfos().notValidEngagements)}
+          keyExtractor={(item) => item.id.toString() + 'voting'}
+          renderItem={({ item }) => <EngagementItem engagement={item} />}
+          ItemSeparatorComponent={AppSeparator}
+        />
+      )}
+      {getSelectedAssoEngagementInfos().notValidEngagements.length === 0 && (
+        <AppMessage message="Aucun engagement trouvé" />
+      )}
     </>
   );
 }

@@ -1,16 +1,16 @@
 {
   "name": "solidarite_mobile",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "eject": "expo eject"
   },
   "dependencies": {
     "@expo-google-fonts/lobster": "^0.2.2",
     "@expo-google-fonts/roboto": "^0.2.2",
+    "@expo/metro-config": "^0.3.11",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/datetimepicker": "4.0.0",
     "@react-native-community/netinfo": "7.1.3",
@@ -25,6 +25,7 @@
     "expo-app-loading": "~1.3.0",
     "expo-application": "~4.0.1",
     "expo-asset": "~8.4.6",
+    "expo-constants": "~13.0.1",
     "expo-device": "~4.1.0",
     "expo-document-picker": "~10.1.3",
     "expo-file-system": "~13.1.4",
@@ -32,7 +33,9 @@
     "expo-image-picker": "~12.0.1",
     "expo-linking": "~3.0.0",
     "expo-notifications": "~0.14.0",
+    "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
+    "expo-system-ui": "~1.1.0",
     "expo-updates": "~0.11.6",
     "formik": "^2.2.9",
     "lottie-react-native": "5.0.1",
@@ -43,9 +46,9 @@
     "react-native-paper": "^4.11.2",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
-    "sentry-expo": "^4.0.0",
-    "yup": "^0.32.11",
-    "expo-constants": "~13.0.1"
+    "react-native-web": "0.17.1",
+    "sentry-expo": "^4.1.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -40,8 +40,8 @@ export default function WelcomeModal({ closeModal, visible, onButtonPress }) {
               <AppSpacer />
               <View>
                 <AppText>
-                  2 - Garantir le financement de projets de chaque association à travers notre
-                  concept de fonds triplés.
+                  2 - Encourager l'entrepreneuriat en garantissant le financement de projets de
+                  chaque association à travers notre concept de fonds triplés.
                 </AppText>
                 <AppText>
                   Le concept de fonds triplés est l'octroi de crédit de financement dont le montant

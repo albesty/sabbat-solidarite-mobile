@@ -17,6 +17,7 @@ export default Object.freeze({
   ASSOCIATION_TAB: 'AssociationTabNavigator',
   CAISSE: 'CaisseScreen',
   COTISATION: 'CotisationNavigator',
+  COTISATION_PAYEMENT: 'CotisationPayementScreen',
   MEMBER: 'MemberNavigator',
   LIST_MEMBER: 'ListMemberScreen',
   MEMBER_DETAIL: 'MemberDetailScreen',

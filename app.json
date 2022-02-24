@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "solidarite_mobile",
-    "slug": "solidarite_mobile",
-    "version": "1.0.0",
+    "name": "sabbat-solidarite",
+    "slug": "sabbat-solidarite",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "hooks": {
@@ -10,9 +10,9 @@
         {
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
-            "organization": "sabbat group",
+            "organization": "sabbat",
             "project": "sabbat-solidarite",
-            "authToken": "8b97b1247c5349359d9821c93d2d3d9fc449d1d97d0e44e79b2b4fc1628e302c"
+            "authToken": "f1f529f4997b4ad6a094a8be05c8023080d7d9cf490048c6b8026fcf441c69f3"
           }
         }
       ]
@@ -42,9 +42,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": ["sentry-expo"]
   }

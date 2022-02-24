@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useContext } from 'react';
@@ -7,7 +8,7 @@ import navigation from '../navigation/routeNavigation';
 import routes from '../navigation/routes';
 
 export default function useNotifications() {
-  const { state, dispatch } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -47,7 +48,6 @@ export default function useNotifications() {
 
   const handleNotificationTaped = async (response) => {
     const connectedUser = state.user;
-    let routeParams;
     const data = response.data;
     const notifType = data.notifType;
     if (connectedUser) {

@@ -37,9 +37,12 @@ export default function RegisterScreen({ navigation }) {
     };
 
     const response = await register(userData);
+    console.log(response);
     if (!response.ok) {
       setLoading(false);
-      setError(response.data?.message);
+      setError(
+        response.data.message ? response.data.message : 'Désolé, nous avons rencontré un problème.'
+      );
       return;
     }
     const connexionError = await getUserLoggedIn(userData);

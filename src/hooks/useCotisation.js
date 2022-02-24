@@ -57,5 +57,27 @@ export default function useCotisation() {
     }
     return compter;
   };
-  return { isMemberUpToCotisationDate, isCotisationPayed, notPayedCompter };
+
+  const getSelectedCotisationPayementInfos = (cotisationId) => {
+    let nombrePayement = 0;
+    let montantPayement = 0;
+    const membersCotisations = Object.values(selectedAssoState.associationCotisations);
+    let allPayedCotisations = [];
+    membersCotisations.forEach((cotisTab) => {
+      allPayedCotisations = [...allPayedCotisations, ...cotisTab];
+    });
+    if (allPayedCotisations.length > 0) {
+      nombrePayement = allPayedCotisations.length;
+      allPayedCotisations.forEach((pay) => {
+        montantPayement += pay.member_cotisation?.montant;
+      });
+    }
+    return { allPayedCotisations, nombrePayement, montantPayement };
+  };
+  return {
+    isMemberUpToCotisationDate,
+    isCotisationPayed,
+    notPayedCompter,
+    getSelectedCotisationPayementInfos,
+  };
 }
