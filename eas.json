@@ -4,7 +4,7 @@
       "developmentClient": true,
       "distribution": "internal"
     },
-    "preview": {
+    "staging": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
