@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Image } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
-import { useFonts as UseRobotoFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
-import { useFonts as useLobsterFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
-
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
 import { colors } from './src/utils/styles';
 import AuthContextProvider from './src/contexts/AuthContext';
 import AssociationContextProvider from './src/contexts/AssociationContext';
@@ -21,16 +21,46 @@ Sentry.init({
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 export default function App() {
-  let [robotoFontsLoaded] = UseRobotoFonts({
-    Roboto_400Regular,
-  });
+  const [isReady, setIsReady] = useState(false);
 
-  let [lobsterLoaded] = useLobsterFonts({
-    Lobster_400Regular,
-  });
+  const cacheFonts = (fonts) => {
+    return fonts.map((font) => Font.loadAsync(font));
+  };
 
-  if (!robotoFontsLoaded || !lobsterLoaded) {
-    return <AppLoading />;
+  const cacheImages = (images) => {
+    return images.map((image) => {
+      if (typeof image === 'string') {
+        return Image.prefetch(image);
+      } else {
+        return Asset.fromModule(image).downloadAsync();
+      }
+    });
+  };
+
+  const loadingAssetsAsync = async () => {
+    const assetImages = cacheImages([
+      require('./assets/main_dans_la_main.jpg'),
+      require('./assets/main_dans_la_main_2.jpg'),
+      require('./assets/silhouette.png'),
+    ]);
+
+    const assetsFonts = cacheFonts([
+      { Roboto_400Regular: require('./assets/Roboto-Regular.ttf') },
+      { Lobster_400Regular: require('./assets/Lobster-Regular.ttf') },
+    ]);
+    await Promise.all([...assetsFonts, ...assetImages]);
+  };
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={loadingAssetsAsync}
+        onFinish={() => setIsReady(true)}
+        onError={(error) => {
+          throw new Error(error);
+        }}
+      />
+    );
   }
 
   return (
