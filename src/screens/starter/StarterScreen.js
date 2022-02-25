@@ -48,6 +48,21 @@ export default function StarterScreen({ navigation }) {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    getAssociations();
+    if (justComeIn) {
+      setTimeout(() => {
+        if (!error && userAssociations.length === 0) {
+          setWelcomeVisible(true);
+          setShowWelcomeModal(true);
+        }
+      }, 3000);
+
+      registerForPushNotificationsAsync();
+      setJustComeIn(false);
+    }
+  }, []);
+
   const handleValidPress = (association) => {
     if (!association.isValid && !isAdmin()) {
       alert('Cette association est encours de validation');
@@ -72,7 +87,7 @@ export default function StarterScreen({ navigation }) {
     } else {
       setUserAssociations(memberState.userAssociations);
     }
-  }, [memberState.userAssociations, associationState.list]);
+  }, [memberState?.userAssociations, associationState?.list]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', (e) => {
@@ -104,21 +119,6 @@ export default function StarterScreen({ navigation }) {
     });
     return unsubscribe;
   }, [navigation]);
-
-  useEffect(() => {
-    getAssociations();
-    if (justComeIn) {
-      setTimeout(() => {
-        if (!error && userAssociations.length === 0) {
-          setWelcomeVisible(true);
-          setShowWelcomeModal(true);
-        }
-      }, 3000);
-
-      registerForPushNotificationsAsync();
-      setJustComeIn(false);
-    }
-  }, []);
 
   return (
     <>
@@ -171,7 +171,7 @@ export default function StarterScreen({ navigation }) {
           buttonTile="Créer ou adhérer"
         />
       )}
-      {!error && userAssociations.length === 0 && welcomeVisible && (
+      {!loading && !error && userAssociations.length === 0 && welcomeVisible && (
         <WelcomeModal
           visible={showWelcomeModal}
           onButtonPress={() => {
