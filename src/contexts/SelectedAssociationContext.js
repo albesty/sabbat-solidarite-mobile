@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { createContext, useMemo, useReducer } from 'react';
 import { selectedAssoReducer } from '../reducers/selectedAssociationReducer';
 

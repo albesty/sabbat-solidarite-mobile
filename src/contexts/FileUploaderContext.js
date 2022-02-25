@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native';
 import React, { createContext, useMemo, useReducer } from 'react';
 import { fileUploaderReducer } from '../reducers/fileUploaderReducer';
 

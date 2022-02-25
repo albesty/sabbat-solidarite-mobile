@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
     setError(null);
     setLoading(false);
     resetForm();
-    navigation.navigate('Starter');
+    navigation.navigate('Starter', { screen: routes.STARTER });
   };
 
   const toggleEntrySecurity = () => {

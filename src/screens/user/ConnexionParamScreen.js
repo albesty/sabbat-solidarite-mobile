@@ -1,7 +1,7 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-import * as Yup from 'yup';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
+import * as Yup from 'yup';
 import AppSpacer from '../../components/common/AppSpacer';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import { changePassword } from '../../api/services/authServices';

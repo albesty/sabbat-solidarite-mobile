@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import AppSurface from '../common/AppSurface';
 import AppText from '../common/AppText';
 import AppIconButton from '../common/AppIconButton';
@@ -9,7 +9,6 @@ import { SelectedAssociationContext } from '../../contexts/SelectedAssociationCo
 import { voteEngagement } from '../../api/services/engagementServices';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function VotingItem({ engagement, goToVotants }) {
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);

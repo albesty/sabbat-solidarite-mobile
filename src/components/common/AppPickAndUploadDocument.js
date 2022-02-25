@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import AppIconButton from './AppIconButton';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';

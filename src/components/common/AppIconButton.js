@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { colors } from '../../utils/styles';
 import AppText from './AppText';

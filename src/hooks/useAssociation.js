@@ -1,6 +1,6 @@
+import React, { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import dayjs from 'dayjs';
-import { useContext } from 'react';
 import { getAll } from '../api/services/associationServices';
 import { sendAdhesionMessage } from '../api/services/memberServices';
 import { AssociationContext } from '../contexts/AssociationContext';

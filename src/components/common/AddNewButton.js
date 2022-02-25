@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { colors } from '../../utils/styles';
 import AppIconButton from './AppIconButton';
 import AppText from './AppText';

@@ -1,5 +1,5 @@
-import { StyleSheet, View, Modal } from 'react-native';
 import React from 'react';
+import { StyleSheet, View, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { colors } from '../../utils/styles';
 import AppText from '../common/AppText';

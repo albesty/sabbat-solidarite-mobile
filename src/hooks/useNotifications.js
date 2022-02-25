@@ -1,7 +1,7 @@
+import React, { useContext } from 'react';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { useContext } from 'react';
 import { setPushNotifToken } from '../api/services/authServices';
 import { AuthContext } from '../contexts/AuthContext';
 import navigation from '../navigation/routeNavigation';

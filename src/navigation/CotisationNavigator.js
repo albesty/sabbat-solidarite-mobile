@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import routes from './routes';

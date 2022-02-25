@@ -1,5 +1,5 @@
-import { StyleSheet, View, ScrollView, Alert } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, Alert } from 'react-native';
 import routes from '../../navigation/routes';
 import useAssociation from '../../hooks/useAssociation';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
@@ -83,17 +83,17 @@ export default function StarterScreen({ navigation }) {
 
   useEffect(() => {
     if (isAdmin()) {
-      setUserAssociations(associationState.list);
+      setUserAssociations(associationState?.list);
     } else {
-      setUserAssociations(memberState.userAssociations);
+      setUserAssociations(memberState?.userAssociations);
     }
   }, [memberState?.userAssociations, associationState?.list]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', (e) => {
+    const navigUnsubscribe = navigation.addListener('blur', (e) => {
       setWelcomeVisible(false);
     });
-    return unsubscribe;
+    return navigUnsubscribe;
   }, [navigation]);
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export default function StarterScreen({ navigation }) {
           mode="outlined"
         />
       </View>
-      {!loading && !error && userAssociations.length > 0 && (
+      {!loading && !error && userAssociations?.length > 0 && (
         <ScrollView
           contentContainerStyle={styles.contentContainerStyle}
           showsVerticalScrollIndicator={false}
@@ -185,7 +185,6 @@ export default function StarterScreen({ navigation }) {
           }}
         />
       )}
-
       {!loading && error && <AppMessage message="Erreur: Echec du chargement de la liste." />}
       {loading && <AppActivityIndicator />}
     </>

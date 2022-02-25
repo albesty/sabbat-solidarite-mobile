@@ -1,3 +1,4 @@
+import React from 'react';
 import { create } from 'apisauce';
 import { Buffer } from 'buffer';
 import { signUploadRequest } from '../api/services/fileUploaderService';

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { StyleSheet, ScrollView } from 'react-native';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, Text } from 'react-native';
 import { fonts, sizes } from '../../utils/styles';
 
 export default function AppText({ style, children, ...otherStyle }) {

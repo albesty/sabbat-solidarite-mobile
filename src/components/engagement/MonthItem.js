@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppText from '../common/AppText';
 import useAssociation from '../../hooks/useAssociation';
 import { colors } from '../../utils/styles';
-import AppLabelAndValueSimple from '../common/AppLabelAndValueSimple';
 import AppLabelValue from '../common/AppLabelValue';
 import AppSeparator from '../common/AppSeparator';
 import AppSpacer from '../common/AppSpacer';

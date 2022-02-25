@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
-import dayjs from 'dayjs';
 import AppTimePicker from '../../components/common/AppTimePicker';
 import AppSpacer from '../../components/common/AppSpacer';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';

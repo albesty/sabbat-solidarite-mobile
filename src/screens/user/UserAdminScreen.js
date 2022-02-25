@@ -1,5 +1,5 @@
-import { StyleSheet, FlatList } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import { getAllUsers } from '../../api/services/authServices';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import AppMessage from '../../components/common/AppMessage';

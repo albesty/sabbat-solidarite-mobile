@@ -1,9 +1,8 @@
-import { StyleSheet, FlatList } from 'react-native';
 import React, { useContext } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
 import MemberItem from '../../components/member/MemberItem';
 import routes from '../../navigation/routes';
-import AppWaitInfo from '../../components/common/AppWaitInfo';
 import useSelectedAssociation from '../../hooks/useSelectedAssociation';
 import AppMessage from '../../components/common/AppMessage';
 

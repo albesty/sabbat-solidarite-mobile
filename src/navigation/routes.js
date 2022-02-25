@@ -21,7 +21,6 @@ export default Object.freeze({
   MEMBER: 'MemberNavigator',
   LIST_MEMBER: 'ListMemberScreen',
   MEMBER_DETAIL: 'MemberDetailScreen',
-  MEMBER_COMPTE: 'MemberCompteScreen',
   DASHBOARD: 'DashboardNavigator',
   NEW_COTISATION: 'NewCotisationScreen',
   LIST_COTISATION: 'ListCotisationScreen',

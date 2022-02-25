@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { colors } from '../../utils/styles';
 import AppAnimation from './AppAnimation';

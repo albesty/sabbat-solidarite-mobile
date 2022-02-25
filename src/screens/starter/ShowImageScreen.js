@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
 import React from 'react';
-import HeaderButton from '../../components/navigation/HeaderButton';
+import { StyleSheet, View, Image } from 'react-native';
 import { colors } from '../../utils/styles';
 
 export default function ShowImageScreen({ route }) {

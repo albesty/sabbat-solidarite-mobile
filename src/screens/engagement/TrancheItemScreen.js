@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, Alert } from 'react-native';
 import * as Yup from 'yup';
 import AppText from '../../components/common/AppText';
 import { colors } from '../../utils/styles';

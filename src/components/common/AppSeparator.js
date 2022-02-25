@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { colors } from '../../utils/styles';
 
 export default function AppSeparator({ style }) {

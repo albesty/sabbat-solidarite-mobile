@@ -1,5 +1,5 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppText from '../common/AppText';
 import useAssociation from '../../hooks/useAssociation';

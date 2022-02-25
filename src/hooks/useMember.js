@@ -1,5 +1,5 @@
+import React, { useContext } from 'react';
 import { Alert } from 'react-native';
-import { useContext } from 'react/cjs/react.development';
 import { getConnectedUserAssociations, leaveAssociation } from '../api/services/memberServices';
 import { AssociationContext } from '../contexts/AssociationContext';
 import { MemberContext } from '../contexts/MemberContext';

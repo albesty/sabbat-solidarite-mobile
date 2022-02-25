@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppText from '../../components/common/AppText';
 import { colors } from '../../utils/styles';
 import routes from '../../navigation/routes';

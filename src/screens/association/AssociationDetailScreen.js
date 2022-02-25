@@ -1,5 +1,5 @@
-import { StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
+import { StyleSheet, ScrollView } from 'react-native';
 import AssociationCard from '../../components/association/AssociationCard';
 import { useContext, useState } from 'react/cjs/react.development';
 import { MemberContext } from '../../contexts/MemberContext';

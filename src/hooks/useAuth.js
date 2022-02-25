@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { login } from '../api/services/authServices';
 import { getAllTransactions } from '../api/services/transactionServices';
 import { AuthContext } from '../contexts/AuthContext';

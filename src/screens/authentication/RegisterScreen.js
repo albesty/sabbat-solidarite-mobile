@@ -37,7 +37,6 @@ export default function RegisterScreen({ navigation }) {
     };
 
     const response = await register(userData);
-    console.log(response);
     if (!response.ok) {
       setLoading(false);
       setError(
@@ -48,7 +47,7 @@ export default function RegisterScreen({ navigation }) {
     const connexionError = await getUserLoggedIn(userData);
     setLoading(false);
     if (connexionError) navigation.navigate(routes.LOGIN);
-    else navigation.navigate('Starter');
+    else navigation.navigate('Starter', { screen: routes.STARTER });
   };
 
   return (

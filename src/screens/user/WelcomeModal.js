@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, Modal, ImageBackground, ScrollView } from 'react-native';
 import React from 'react';
+import { StyleSheet, View, Modal, ImageBackground, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import AppIconButton from '../../components/common/AppIconButton';
 import AppText from '../../components/common/AppText';
 import AppSpacer from '../../components/common/AppSpacer';
 import AppButton from '../../components/common/AppButton';
 import routes from '../../navigation/routes';
-import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../utils/styles';
 
 export default function WelcomeModal({ closeModal, visible, onButtonPress }) {

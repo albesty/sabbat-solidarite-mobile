@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useContext } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import AppText from '../../components/common/AppText';
 import { colors } from '../../utils/styles';
 import AppSurface from '../../components/common/AppSurface';

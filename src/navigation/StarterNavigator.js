@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import routes from './routes';
 import StarterScreen from '../screens/starter/StarterScreen';

@@ -1,5 +1,5 @@
-import { StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
+import { StyleSheet, ScrollView } from 'react-native';
 import AppLabelValueAction from '../../components/common/AppLabelValueAction';
 
 export default function ProfileScreen({ route }) {

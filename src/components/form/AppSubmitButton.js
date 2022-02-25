@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 import AppButton from '../../components/common/AppButton';
 import { useFormikContext } from 'formik';

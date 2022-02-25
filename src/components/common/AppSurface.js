@@ -1,7 +1,7 @@
-import { StyleSheet, TouchableHighlight } from 'react-native';
 import React from 'react';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 import { Surface } from 'react-native-paper';
-import { colors, fonts } from '../../utils/styles';
+import { colors } from '../../utils/styles';
 import AppText from './AppText';
 
 export default function AppSurface({ style, onPress, info, infoStyle, surfaceStyle, children }) {

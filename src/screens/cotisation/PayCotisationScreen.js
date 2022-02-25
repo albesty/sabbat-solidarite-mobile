@@ -1,5 +1,5 @@
-import { StyleSheet, Alert, View } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { StyleSheet, Alert, View } from 'react-native';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import AppSpacer from '../../components/common/AppSpacer';
@@ -8,7 +8,6 @@ import { SelectedAssociationContext } from '../../contexts/SelectedAssociationCo
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { payCotisation } from '../../api/services/memberServices';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
-import { BottomNavigation } from 'react-native-paper';
 import routes from '../../navigation/routes';
 
 const validPayCotis = Yup.object().shape({

@@ -1,12 +1,11 @@
-import { Alert, StyleSheet, View } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 import { Card } from 'react-native-paper';
 import AppText from '../common/AppText';
 import { colors } from '../../utils/styles';
 import useAuth from '../../hooks/useAuth';
 import { AuthContext } from '../../contexts/AuthContext';
 import AppButton from '../common/AppButton';
-import AppWaitInfo from '../common/AppWaitInfo';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import AppIconButton from '../common/AppIconButton';
 import AppSpacer from '../common/AppSpacer';

@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import AppText from '../common/AppText';
 import { colors, fonts, sizes } from '../../utils/styles';
 

@@ -1,10 +1,9 @@
-import { StyleSheet, FlatList } from 'react-native';
 import React from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import MemberItem from '../../components/member/MemberItem';
 import { colors } from '../../utils/styles';
 import useSelectedAssociation from '../../hooks/useSelectedAssociation';
 import routes from '../../navigation/routes';
-import useAuth from '../../hooks/useAuth';
 
 export default function ListMemberScreen({ navigation }) {
   const { getSelectedAssoCurrentMembers } = useSelectedAssociation();

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import React, { useCallback, useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import AddNewButton from '../../components/common/AddNewButton';
 import routes from '../../navigation/routes';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';

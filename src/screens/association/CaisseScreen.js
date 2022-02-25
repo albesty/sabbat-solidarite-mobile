@@ -1,5 +1,5 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import AssociationCard from '../../components/association/AssociationCard';
 import AppSurface from '../../components/common/AppSurface';
 import AppText from '../../components/common/AppText';

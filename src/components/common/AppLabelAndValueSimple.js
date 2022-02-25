@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import AppText from './AppText';
 
 export default function AppLabelAndValueSimple({ value, label }) {

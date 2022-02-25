@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { colors } from '../../utils/styles';
 import UserAvatar from '../user/UserAvatar';
 import AppText from '../common/AppText';

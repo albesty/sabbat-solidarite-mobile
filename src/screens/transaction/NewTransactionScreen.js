@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
+import { List } from 'react-native-paper';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -15,7 +16,6 @@ import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import useAssociation from '../../hooks/useAssociation';
 import useAuth from '../../hooks/useAuth';
 import AppInput from '../../components/common/AppInput';
-import { List } from 'react-native-paper';
 import AppMessage from '../../components/common/AppMessage';
 const validTransaction = Yup.object().shape({
   montant: Yup.number()

@@ -1,9 +1,9 @@
-import { StyleSheet, TouchableWithoutFeedback, View, Image } from 'react-native';
 import React, { useState } from 'react';
+import { StyleSheet, TouchableWithoutFeedback, View, Image } from 'react-native';
 import { colors } from '../../utils/styles';
 import AppAnimation from '../common/AppAnimation';
 
-export default function UserAvatar({ onPress, avatarStyle, user, loadingContainer }) {
+export default function UserAvatar({ onPress, avatarStyle, user = null, loadingContainer }) {
   const [loading, setLoading] = useState(false);
 
   const isUserAvatar = user && user.avatar;

@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View, ScrollView, TextInput } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { List } from 'react-native-paper';
+import React, { useState } from 'react';
+import { StyleSheet, View, ScrollView, TextInput } from 'react-native';
 import AppSurface from '../../components/common/AppSurface';
 import AppText from '../../components/common/AppText';
-import useCotisation from '../../hooks/useCotisation';
 import useAssociation from '../../hooks/useAssociation';
 import { colors } from '../../utils/styles';
 import useSelectedAssociation from '../../hooks/useSelectedAssociation';

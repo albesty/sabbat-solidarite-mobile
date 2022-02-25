@@ -1,5 +1,6 @@
-import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
+import { List } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppImagePicker from '../../components/common/AppImagePicker';
 import UserAvatar from '../../components/user/UserAvatar';
@@ -16,7 +17,6 @@ import AppAnimation from '../../components/common/AppAnimation';
 import AppSpacer from '../../components/common/AppSpacer';
 import useAssociation from '../../hooks/useAssociation';
 import AppButton from '../../components/common/AppButton';
-import { List } from 'react-native-paper';
 import routes from '../../navigation/routes';
 import useAuth from '../../hooks/useAuth';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';

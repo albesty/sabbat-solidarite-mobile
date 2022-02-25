@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import routes from './routes';
 import { colors } from '../utils/styles';

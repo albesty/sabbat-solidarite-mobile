@@ -3,7 +3,6 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import routes from './routes';
 import ListMemberScreen from '../screens/membres/ListMemberScreen';
 import MemberDetailScreen from '../screens/membres/MemberDetailScreen';
-import MemberCompteScreen from '../screens/membres/MemberCompteScreen';
 import { colors } from '../utils/styles';
 import HeaderButton from '../components/navigation/HeaderButton';
 import NavigationTitle from '../components/navigation/NavigationTitle';
@@ -40,13 +39,6 @@ export default function MemberNavigator() {
           ),
           headerTitle: () => <NavigationTitle title="Details Compte membre" />,
         })}
-      />
-      <MembreStack.Screen
-        name={routes.MEMBER_COMPTE}
-        component={MemberCompteScreen}
-        options={{
-          headerTitle: () => <NavigationTitle title="Compte membre" />,
-        }}
       />
       <MembreStack.Screen
         name={routes.MEMBER_EDIT_INFO}

@@ -1,5 +1,5 @@
-import { Provider as PaperProvider } from 'react-native-paper';
 import React from 'react';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
 import { useFonts as UseRobotoFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';

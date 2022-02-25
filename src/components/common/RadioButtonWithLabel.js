@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import AppText from './AppText';
 import AppIconButton from './AppIconButton';
 import { colors } from '../../utils/styles';

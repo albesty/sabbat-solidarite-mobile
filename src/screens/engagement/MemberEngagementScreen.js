@@ -1,6 +1,5 @@
-import { StyleSheet, View } from 'react-native';
 import React, { useContext } from 'react';
-import { FlatList } from 'react-native-gesture-handler';
+import { StyleSheet, View, FlatList } from 'react-native';
 import AppText from '../../components/common/AppText';
 import AddNewButton from '../../components/common/AddNewButton';
 import routes from '../../navigation/routes';

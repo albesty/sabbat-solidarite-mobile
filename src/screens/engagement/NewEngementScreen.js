@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import AppTimePicker from '../../components/common/AppTimePicker';
-import { ScrollView } from 'react-native-gesture-handler';
 import AppSpacer from '../../components/common/AppSpacer';
 import RadioButtonWithLabel from '../../components/common/RadioButtonWithLabel';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';

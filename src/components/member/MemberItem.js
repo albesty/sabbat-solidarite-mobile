@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import UserAvatar from '../user/UserAvatar';
 import AppText from '../common/AppText';
 import AppSurface from '../common/AppSurface';
