@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import AssociationCard from '../../components/association/AssociationCard';
-import { useContext, useState } from 'react/cjs/react.development';
 import { MemberContext } from '../../contexts/MemberContext';
 import { List } from 'react-native-paper';
 import useAssociation from '../../hooks/useAssociation';
