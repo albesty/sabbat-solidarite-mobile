@@ -1,13 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
 import MemberItem from '../../components/member/MemberItem';
 import routes from '../../navigation/routes';
 import useSelectedAssociation from '../../hooks/useSelectedAssociation';
 import AppMessage from '../../components/common/AppMessage';
 
 export default function NewMemberScreen({ navigation }) {
-  const { selectedAssoState } = useContext(SelectedAssociationContext);
   const { getSelectedAssoCurrentMembers } = useSelectedAssociation();
 
   return (

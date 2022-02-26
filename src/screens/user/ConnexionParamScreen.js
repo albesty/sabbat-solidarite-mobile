@@ -30,7 +30,6 @@ export default function ConnexionParamScreen({ navigation, route }) {
   const selectedUser = route.params;
   const [secureOldPass, setSecureOldPass] = useState(true);
   const [secureNewPass, setSecureNewPass] = useState(true);
-  const [secureConfirmPass, setSecureConfirmPass] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleChangeParam = async (data, { resetForm }) => {
@@ -99,16 +98,10 @@ export default function ConnexionParamScreen({ navigation, route }) {
               />
               <AppSpacer />
               <AppFormField
-                secureTextEntry={secureConfirmPass}
-                right={
-                  <TextInput.Icon
-                    name="eye"
-                    onPress={() => setSecureConfirmPass(!secureConfirmPass)}
-                  />
-                }
+                secureTextEntry={true}
                 icon="lock"
                 name="confirmNewPass"
-                label="Confirmer password"
+                label="Confirmer nouveau pass"
               />
               <AppSpacer />
               <AppSubmitButton title="Valider" />
@@ -125,7 +118,7 @@ export default function ConnexionParamScreen({ navigation, route }) {
             onSubmit={handleChangeParam}
           >
             <View style={styles.container}>
-              <AppFormField name="email" label="Email" />
+              <AppFormField name="email" label="Nouvelle adresse email" />
               <AppSpacer />
               <AppSubmitButton title="Valider" />
             </View>

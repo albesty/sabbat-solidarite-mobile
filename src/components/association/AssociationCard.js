@@ -149,15 +149,18 @@ export default function AssociationCard({
                 <AppAnimation />
               </View>
             )}
+            {showCamera && isAuthorized && (
+              <View style={styles.cameraContainer}>
+                <AppIconButton
+                  style={styles.camera}
+                  onPress={() => setShowImageModal(true)}
+                  icon="camera"
+                />
+              </View>
+            )}
           </View>
         </TouchableWithoutFeedback>
-        {showCamera && isAuthorized && (
-          <AppIconButton
-            style={styles.camera}
-            onPress={() => setShowImageModal(true)}
-            icon="camera"
-          />
-        )}
+
         {uploading && <UploaderModal style={styles.avatarLoading} progress={progress} />}
         <Card.Content style={{ paddingBottom: showActions ? 0 : 10 }}>
           <Card.Title
@@ -256,15 +259,16 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   camera: {
-    position: 'absolute',
-    right: 10,
-    bottom: 80,
-    backgroundColor: colors.leger,
     height: 60,
     width: 60,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  cameraContainer: {
+    position: 'absolute',
+    right: 10,
+    bottom: 0,
   },
   cardActions: {
     justifyContent: 'flex-end',

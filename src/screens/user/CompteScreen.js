@@ -228,7 +228,8 @@ export default function CompteScreen({ route, navigation }) {
             <View style={styles.pieceContainer}>
               {pieces.length === 0 && (
                 <AppText style={{ fontSize: 15 }}>
-                  Vos documents d'Identification s'afficheront ici.
+                  Vos documents d'Identification s'afficheront ici.Exigé seulement pour le fonds
+                  triplé.
                 </AppText>
               )}
               {pieces.length > 0 && (

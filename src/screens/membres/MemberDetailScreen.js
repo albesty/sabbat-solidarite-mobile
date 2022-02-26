@@ -19,10 +19,13 @@ import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 import routes from '../../navigation/routes';
 import useMember from '../../hooks/useMember';
 import AppIconButton from '../../components/common/AppIconButton';
+import { AuthContext } from '../../contexts/AuthContext';
 
 export default function MemberDetailScreen({ route, navigation }) {
   const selectedMember = route.params;
+
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
+  const { state } = useContext(AuthContext);
   const { formatFonds } = useAssociation();
   const { isAdmin, isModerator, getMemberStatut } = useAuth();
   const { getMemberCotisationsInfo } = useSelectedAssociation();
@@ -52,7 +55,8 @@ export default function MemberDetailScreen({ route, navigation }) {
     setLoading(true);
     const data = {
       associationId: selectedAssoState.selectedAssociation.id,
-      userId: selectedMember.id,
+      memberId: selectedMember.id,
+      userId: state.user.id,
       adminResponse: resp.adminResponse,
       info: resp.info,
     };
