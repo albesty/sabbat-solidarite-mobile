@@ -51,7 +51,10 @@ export default function useAuth() {
   const getUserLoggedIn = async (user) => {
     let error = null;
     const response = await login(user);
-    if (!response.ok) return (error = response.data.message);
+    if (!response.ok)
+      return (error = response.data.message
+        ? response.data.message
+        : 'Nous avons rencontré une erreur inconnue.');
     const newUser = transformUserData(response.data);
     storeToken(response.data.accessToken);
     dispatch({ type: actions.loginOrRegister, user: newUser });

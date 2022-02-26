@@ -12,6 +12,11 @@ export const colors = {
   rouge: 'red',
 };
 
+/* export const fonts = {
+  titleFont: Platform.OS === 'android' ? 'Roboto' : 'Avenir',
+  contentFont: Platform.OS === 'android' ? 'Roboto' : 'Avenir',
+}; */
+
 export const fonts = {
   titleFont: 'Lobster_400Regular',
   contentFont: 'Roboto_400Regular',

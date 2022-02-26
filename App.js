@@ -3,8 +3,7 @@ import { Image } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
-import { useFonts as useRobotoFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
-import { useFonts as useLobsterFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
+import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import { colors } from './src/utils/styles';
 import AuthContextProvider from './src/contexts/AuthContext';
@@ -23,15 +22,6 @@ Sentry.init({
 });
 export default function App() {
   const [isReady, setIsReady] = useState(false);
-
-  let [robotoLoaded] = useRobotoFonts({
-    Roboto_400Regular,
-  });
-  let [lobsterLoaded] = useLobsterFonts({
-    Lobster_400Regular,
-  });
-
-  /* 
   const cacheFonts = (fonts) => {
     return fonts.map((font) => Font.loadAsync(font));
   };
@@ -63,9 +53,9 @@ export default function App() {
 
   useEffect(() => {
     loadingAssetsAsync();
-  }, []); */
+  }, []);
 
-  if (!robotoLoaded || !lobsterLoaded) {
+  if (!isReady) {
     return <AppLoading />;
   }
 

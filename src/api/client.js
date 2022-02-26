@@ -3,7 +3,7 @@ import settings from './settings';
 import { getToken } from '../storage/authStorage';
 
 const apiClient = create({
-  baseURL: settings.baseUrl,
+  baseURL: settings.baseURL,
 });
 
 apiClient.addAsyncRequestTransform(async (request) => {

@@ -1,21 +1,21 @@
-import Updates from 'expo-updates';
+import Constants from 'expo-constants';
 
 const settings = {
   dev: {
-    baseUrl: 'http://192.168.1.100:5000/api',
+    baseURL: 'http://192.168.1.100:5000/api',
   },
   staging: {
-    baseUrl: 'https://sabbat-solidarite.herokuapp.com/api',
+    baseURL: 'https://sabbat-solidarite.herokuapp.com/api',
   },
-  production: {
-    baseUrl: 'https://sabbat-solidarite.herokuapp.com/api',
+  prod: {
+    baseURL: 'https://sabbat-solidarite.herokuapp.com/api',
   },
 };
 
 const getCurrentSettings = () => {
   if (__DEV__) return settings.dev;
-  if (Updates.releaseChannel === 'staging') return settings.staging;
-  return settings.production;
+  if (Constants.manifest.releaseChannel === 'staging') return settings.staging;
+  return settings.prod;
 };
 
 export default getCurrentSettings();
