@@ -7,7 +7,7 @@ const settings = {
   staging: {
     baseUrl: 'https://sabbat-solidarite.herokuapp.com/api',
   },
-  prod: {
+  production: {
     baseUrl: 'https://sabbat-solidarite.herokuapp.com/api',
   },
 };
@@ -15,7 +15,7 @@ const settings = {
 const getCurrentSettings = () => {
   if (__DEV__) return settings.dev;
   if (Updates.releaseChannel === 'staging') return settings.staging;
-  return settings.prod;
+  return settings.production;
 };
 
 export default getCurrentSettings();

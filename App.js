@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
-import * as Font from 'expo-font';
+import { useFonts as useRobotoFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
+import { useFonts as useLobsterFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
 import { Asset } from 'expo-asset';
 import { colors } from './src/utils/styles';
 import AuthContextProvider from './src/contexts/AuthContext';
@@ -16,13 +17,21 @@ import AppWrapper from './AppWrapper';
 import * as Sentry from 'sentry-expo';
 
 Sentry.init({
-  dsn: 'https://4454cb38dd09423b852d2de664929bc1@o1145696.ingest.sentry.io/6213342',
+  dsn: 'https://4b954bfd857d47ceb1d107fd69f78e97@o541240.ingest.sentry.io/5805068',
   enableInExpoDevelopment: true,
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 export default function App() {
   const [isReady, setIsReady] = useState(false);
 
+  let [robotoLoaded] = useRobotoFonts({
+    Roboto_400Regular,
+  });
+  let [lobsterLoaded] = useLobsterFonts({
+    Lobster_400Regular,
+  });
+
+  /* 
   const cacheFonts = (fonts) => {
     return fonts.map((font) => Font.loadAsync(font));
   };
@@ -49,18 +58,15 @@ export default function App() {
       { Lobster_400Regular: require('./assets/Lobster-Regular.ttf') },
     ]);
     await Promise.all([...assetsFonts, ...assetImages]);
+    setIsReady(true);
   };
 
-  if (!isReady) {
-    return (
-      <AppLoading
-        startAsync={loadingAssetsAsync}
-        onFinish={() => setIsReady(true)}
-        onError={(error) => {
-          throw new Error(error);
-        }}
-      />
-    );
+  useEffect(() => {
+    loadingAssetsAsync();
+  }, []); */
+
+  if (!robotoLoaded || !lobsterLoaded) {
+    return <AppLoading />;
   }
 
   return (
