@@ -1,7 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import { List } from 'react-native-paper';
 import * as Yup from 'yup';
+
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
 import { AuthContext } from '../../contexts/AuthContext';
 import routes from '../../navigation/routes';
@@ -17,12 +18,14 @@ import useAssociation from '../../hooks/useAssociation';
 import useAuth from '../../hooks/useAuth';
 import AppInput from '../../components/common/AppInput';
 import AppMessage from '../../components/common/AppMessage';
+
 const validTransaction = Yup.object().shape({
   montant: Yup.number()
     .typeError('Montant invalide')
     .min(100, 'Le montant doit etre de 100 xof minimum.')
     .required('Veuillez indiquer le montant.'),
 });
+
 export default function NewTransactionScreen({ route, navigation }) {
   const currentTransaction = route.params;
   const user = route.params.user;
@@ -37,6 +40,10 @@ export default function NewTransactionScreen({ route, navigation }) {
   const [reseau, setReseau] = useState('');
   const [favoriteNumbers, setFavoriteNumbers] = useState([]);
   let [numero, setNumero] = useState('');
+  const [showCardContainer, setShowCardContainer] = useState(false);
+  const [braintreeInstance, setBrainInstance] = useState(undefined);
+
+  const cardContainerRef = useRef();
 
   const handleAddTransaction = async (transaction, { resetForm }) => {
     if (!reseau || reseau.length === 0) {
@@ -187,7 +194,7 @@ export default function NewTransactionScreen({ route, navigation }) {
             label="Carte de crédit"
             onPress={() => {
               setMobileTransaction(false);
-              setOnCreditCardSelect(!onCreditCardSelect);
+              setShowCardContainer(!showCardContainer);
             }}
             onSelectButton={onCreditCardSelect}
           >
@@ -228,6 +235,10 @@ export default function NewTransactionScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    height: '100%',
+    width: '100%',
+  },
   container: {
     paddingVertical: 40,
     marginHorizontal: 30,

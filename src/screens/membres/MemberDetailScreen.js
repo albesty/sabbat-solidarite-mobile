@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Alert } from 'react-native';
 import { List } from 'react-native-paper';
 import UserAvatar from '../../components/user/UserAvatar';
 import AppText from '../../components/common/AppText';
@@ -20,6 +20,7 @@ import routes from '../../navigation/routes';
 import useMember from '../../hooks/useMember';
 import AppIconButton from '../../components/common/AppIconButton';
 import { AuthContext } from '../../contexts/AuthContext';
+import AppSimpleButton from '../../components/common/AppSimpleButton';
 
 export default function MemberDetailScreen({ route, navigation }) {
   const selectedMember = route.params;
@@ -51,24 +52,44 @@ export default function MemberDetailScreen({ route, navigation }) {
     selectedMember.profession ||
     selectedMember.emploi;
 
-  const adhesionResponse = async (resp) => {
-    setLoading(true);
-    const data = {
-      associationId: selectedAssoState.selectedAssociation.id,
-      memberId: selectedMember.id,
-      userId: state.user.id,
-      adminResponse: resp.adminResponse,
-      info: resp.info,
-    };
-    const response = await responseToAdhesionMessage(data);
-    if (!response.ok) {
-      setLoading(false);
-      alert('La requête a échoué. Veuillez reessayer plutard.');
-      return;
-    }
-    dispatchSelectedAsso({ type: selectedAssoActions.respond_to_adhesion, member: response.data });
-    setLoading(false);
-    alert('Requête effectuée avec succès.');
+  const adhesionResponse = (resp) => {
+    const memberName = selectedMember.username
+      ? selectedMember.username
+      : selectedMember.nom
+      ? selectedMember.nom
+      : selectedMember.email;
+    const alertInfo =
+      resp.adminResponse === 'member'
+        ? `Voulez-vous accepter ${memberName} dans votre associaion?`
+        : `Voulez-vous refuser ${memberName} dans votre associaion?`;
+    Alert.alert('Attention!', alertInfo, [
+      { text: 'non', onPress: () => null },
+      {
+        text: 'oui',
+        onPress: async () => {
+          setLoading(true);
+          const data = {
+            associationId: selectedAssoState.selectedAssociation.id,
+            memberId: selectedMember.id,
+            userId: state.user.id,
+            adminResponse: resp.adminResponse,
+            info: resp.info,
+          };
+          const response = await responseToAdhesionMessage(data);
+          if (!response.ok) {
+            setLoading(false);
+            alert('La requête a échoué. Veuillez reessayer plutard.');
+            return;
+          }
+          dispatchSelectedAsso({
+            type: selectedAssoActions.respond_to_adhesion,
+            member: response.data,
+          });
+          setLoading(false);
+          alert('Requête effectuée avec succès.');
+        },
+      },
+    ]);
   };
 
   const handleLeaveAssociation = () => {
@@ -172,25 +193,34 @@ export default function MemberDetailScreen({ route, navigation }) {
         {isAdministrateur && isNotYetMember && (
           <View>
             <AppSpacer />
-            <AppButton
+            <AppSimpleButton
+              icon="account-multiple-plus"
+              color={colors.vert}
               onPress={() => adhesionResponse({ adminResponse: 'member', info: 'new' })}
-              style={styles.accept}
-              title="Accepter"
+              labelStyle={styles.accept}
+              label="Accepter"
             />
             <AppSpacer />
-            <AppButton
+            <AppSimpleButton
+              icon="account-multiple-minus"
+              color={colors.rougeBordeau}
               onPress={() => adhesionResponse({ adminResponse: 'rejected', info: 'new' })}
-              style={styles.refuse}
-              title="Refuser"
+              labelStyle={styles.leaveLabel}
+              containerStyle={styles.leaveContainer}
+              label="Refuser"
             />
           </View>
         )}
         <AppSpacer />
         {canQuitte && (
-          <AppButton
+          <AppSimpleButton
+            icon="account-remove"
+            size={20}
+            color={colors.rougeBordeau}
             onPress={handleLeaveAssociation}
-            style={styles.leave}
-            title="Quitter cette association"
+            containerStyle={styles.leaveContainer}
+            labelStyle={styles.leaveLabel}
+            label="Quitter cette association"
           />
         )}
         {authorizeQuit && (
@@ -229,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   accept: {
-    backgroundColor: colors.vert,
+    color: colors.vert,
   },
   avatar: {
     height: 150,
@@ -242,7 +272,8 @@ const styles = StyleSheet.create({
   },
   contentContainerStyle: {
     marginHorizontal: 20,
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 30,
   },
   editInfo: {
     backgroundColor: colors.bleuFbi,
@@ -253,9 +284,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: 10,
   },
-  leave: {
-    fontSize: 15,
-    backgroundColor: colors.rougeBordeau,
+  leaveLabel: {
+    color: colors.rougeBordeau,
   },
   quitter: {
     flexDirection: 'row',

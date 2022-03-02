@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     width: '100%',
     height: '100%',
-    top: '60%',
+    top: '65%',
   },
   close: {
     alignSelf: 'flex-end',

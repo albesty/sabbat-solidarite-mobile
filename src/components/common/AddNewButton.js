@@ -4,14 +4,21 @@ import { colors } from '../../utils/styles';
 import AppIconButton from './AppIconButton';
 import AppText from './AppText';
 
-export default function AddNewButton({ style, onPress, notif = 0, icon = 'plus', ...other }) {
+export default function AddNewButton({
+  style,
+  notifStyle,
+  onPress,
+  notif = 0,
+  icon = 'plus',
+  ...other
+}) {
   return (
     <View>
-      <View style={styles.container}>
+      <View style={[styles.container, style]}>
         <AppIconButton icon={icon} size={40} onPress={onPress} {...other} />
 
         {notif > 0 && (
-          <View style={styles.notif}>
+          <View style={[styles.notif, notifStyle]}>
             <AppText style={styles.notifText}>{notif}</AppText>
           </View>
         )}
@@ -30,7 +37,7 @@ const styles = StyleSheet.create({
     right: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.rougeBordeau,
+    backgroundColor: colors.bleuFbi,
     zIndex: 999,
   },
   notif: {
@@ -42,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.bleuFbi,
+    backgroundColor: colors.rougeBordeau,
   },
   notifText: {
     fontSize: 13,

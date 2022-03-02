@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     paddingVertical: 10,
     color: colors.white,
+    fontSize: 10,
   },
   links: {
     width: '40%',

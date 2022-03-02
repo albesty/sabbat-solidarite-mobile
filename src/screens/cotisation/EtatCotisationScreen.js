@@ -40,6 +40,8 @@ export default function EtatCotisationScreen({ navigation }) {
         )}
       />
       <AddNewButton
+        style={styles.AddNewButton}
+        notifStyle={styles.notif}
         notif={notPayedCompter()}
         icon="credit-card-multiple"
         onPress={() => navigation.navigate(routes.LIST_COTISATION)}
@@ -55,5 +57,11 @@ export default function EtatCotisationScreen({ navigation }) {
 const styles = StyleSheet.create({
   contentContainerStyle: {
     paddingVertical: 20,
+  },
+  AddNewButton: {
+    backgroundColor: colors.rougeBordeau,
+  },
+  notif: {
+    backgroundColor: colors.bleuFbi,
   },
 });

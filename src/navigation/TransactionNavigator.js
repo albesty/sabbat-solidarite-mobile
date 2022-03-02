@@ -7,6 +7,7 @@ import HeaderButton from '../components/navigation/HeaderButton';
 import NewTransactionScreen from '../screens/transaction/NewTransactionScreen';
 import NavigationTitle from '../components/navigation/NavigationTitle';
 import TransactionScreen from '../screens/transaction/TransactionScreen';
+import NewCardTransactionScreen from '../screens/transaction/NewCardTransactionScreen';
 
 const TransactionStack = createStackNavigator();
 
@@ -32,6 +33,15 @@ export default function TransactionNavigator() {
         component={NewTransactionScreen}
         options={({ route }) => ({
           headerTitle: () => <NavigationTitle title={`Nouveau ${route.params.transactionName}`} />,
+        })}
+      />
+      <TransactionStack.Screen
+        name={routes.CARD_TRANSACTON}
+        component={NewCardTransactionScreen}
+        options={({ route }) => ({
+          headerTitle: () => (
+            <NavigationTitle title={`${route.params.transactionName} par carte`} />
+          ),
         })}
       />
     </TransactionStack.Navigator>

@@ -9,6 +9,7 @@ import { getAllEngagementsVotes } from '../../api/services/engagementServices';
 import { SelectedAssociationContext } from '../../contexts/SelectedAssociationContext';
 import AppActivityIndicator from '../../components/common/AppActivityIndicator';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
+import { colors } from '../../utils/styles';
 
 export default function EtatEngagementScreen({ navigation }) {
   const { selectedAssoState, dispatchSelectedAsso } = useContext(SelectedAssociationContext);
@@ -55,6 +56,8 @@ export default function EtatEngagementScreen({ navigation }) {
       />
       {loading && <AppActivityIndicator />}
       <AddNewButton
+        style={styles.AddNewButton}
+        notifStyle={styles.notif}
         notif={getNotVoteCounter()}
         icon="vote"
         onPress={() => navigation.navigate(routes.VOTE_ENGAGEMENT)}
@@ -64,7 +67,13 @@ export default function EtatEngagementScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  AddNewButton: {
+    backgroundColor: colors.rougeBordeau,
+  },
   contentContainerStyle: {
     paddingVertical: 20,
+  },
+  notif: {
+    backgroundColor: colors.bleuFbi,
   },
 });

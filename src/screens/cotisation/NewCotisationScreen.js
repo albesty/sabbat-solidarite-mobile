@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import * as Yup from 'yup';
 import { AppForm, AppFormField, AppSubmitButton } from '../../components/form';
@@ -9,6 +9,8 @@ import { SelectedAssociationContext } from '../../contexts/SelectedAssociationCo
 import { addCotisation } from '../../api/services/selectedAssociationServices';
 import { selectedAssoActions } from '../../reducers/selectedAssociationReducer';
 import RadioButtonWithLabel from '../../components/common/RadioButtonWithLabel';
+import { months } from '../../utils/months';
+import dayjs from 'dayjs';
 
 const validCotisation = Yup.object().shape({
   montant: Yup.number().typeError('Montant incorrect').required('Indiquez un montant'),
@@ -23,6 +25,9 @@ export default function NewCotisationScreen() {
   const [isMensuelle, setIsMensuelle] = useState(true);
   const [isExcept, setIsExcept] = useState(false);
   const [cotisationType, setCotisationType] = useState('mensuel');
+  const [currentMonth, setCurrentMonth] = useState(
+    months.find((item) => item.number === dayjs().month()).name
+  );
 
   const handleSaveCotisation = async (data) => {
     setLoading(true);
@@ -47,7 +52,6 @@ export default function NewCotisationScreen() {
     setLoading(false);
     alert('La cotisation a été ajoutée avec succès.');
   };
-
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
@@ -55,7 +59,7 @@ export default function NewCotisationScreen() {
           <RadioButtonWithLabel
             onSelectButton={isMensuelle}
             onPress={() => {
-              isExcept(false);
+              setIsExcept(false);
               setIsMensuelle(!isMensuelle);
               setCotisationType('mensuel');
             }}
@@ -75,7 +79,7 @@ export default function NewCotisationScreen() {
         <AppForm
           initialValues={{
             montant: '',
-            motif: '',
+            motif: isMensuelle ? `Cotisation mensuelle du mois de ${currentMonth}` : '',
             dateDebut: new Date(),
             dateFin: new Date(),
           }}
